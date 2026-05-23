@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "searxng",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "mzc72zqcD/nRtI5arNmBu7D5CqCOdwdgUUUy9PpaWLLKNcLIKovm9EY7BT/udt5eAV3vTVaZmhimwyvaU6BfBQ=="
+}

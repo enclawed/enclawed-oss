@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "opencode-go",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "je8CVCeBeR7sF/nmdC3unj+sebcKqGt66eXfj9Guz3+TxisdWJ/VMR+gBI6eFBWeUzx8AyB2KT0BYzcKafdnAA=="
+}

@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "id": "qqbot",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.27",
+  "clearance": "internal",
+  "capabilities": [
+    "publish",
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "64T2WtxruS8M8P6fl8L6/x4oyr9SfOJOXJdjaAIM/u7Ypp2WQL0Ep+pXep/6PQviHnVPINdXq9ub26qEGN8HDg=="
+}

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "opencode",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "v0yajE0IH1YlvcxjZZyBl5lhIaVeCB7oXuDXzNdwElVu28CpXGHHDquiE8JAV6jcuoeH3vlczAH90qOIOXqLDA=="
+}

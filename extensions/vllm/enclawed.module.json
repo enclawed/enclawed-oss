@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "vllm",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "W0lk730lmraQKsVCJAWzHhOSasEv5wYTt2Pz9z75uklrUgx08GrcmRBAGbACXwJjERCdKq31qLA/jZGRH7FNBQ=="
+}

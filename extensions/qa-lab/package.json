@@ -1,0 +1,36 @@
+{
+  "name": "@enclawed/qa-lab",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed QA lab plugin with private debugger UI and scenario runner",
+  "type": "module",
+  "dependencies": {
+    "@copilotkit/aimock": "1.13.0",
+    "playwright-core": "1.59.1"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.16"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "install": {
+      "npmSpec": "@enclawed/qa-lab",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    }
+  }
+}

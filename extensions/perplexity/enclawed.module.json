@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "perplexity",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "NzAAZMKCtyFU+MJ2QlpMmoZXDfvXKtxRSxAcFhCUeyW2xe73FsU35ItW2XtUKN7c+PVFsvr7Ei3M59EfAwe6BQ=="
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@enclawed/mattermost",
+  "version": "2026.4.25",
+  "description": "Enclawed Mattermost channel plugin",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "mattermost",
+      "label": "Mattermost",
+      "selectionLabel": "Mattermost (plugin)",
+      "docsPath": "/channels/mattermost",
+      "docsLabel": "mattermost",
+      "blurb": "self-hosted Slack-style chat; install the plugin to enable.",
+      "order": 65
+    },
+    "install": {
+      "npmSpec": "@enclawed/mattermost",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    }
+  }
+}

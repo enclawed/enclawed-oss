@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "file-transfer",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.27",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "b1iLDZn4yLrbKllNmvMkOd/+oTLSAq8hJQQXYRKN9yHoe/v/SB7fCd3ace+QgxC1J9Bv+3hUmzLl9gLVzILADQ=="
+}

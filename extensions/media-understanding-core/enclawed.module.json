@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "media-understanding-core",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "IOWGJKfI1AJcr9926kIgcX7oIoq5GSfnL7BXc6OzUE0N5fJy5vd6OoUHOPs4+axqtF0PoKcwn2yOR6NKZEv1AQ=="
+}

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "nvidia",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "9pRdzMQCEUMWlScR0VkhEKCfwFBwMMIDG6lius9+689l0PElS2QiOGctLUyTI8Z/wfWkEtswmKvshYpfD6OzCQ=="
+}

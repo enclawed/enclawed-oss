@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "xai",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "gY5CtPIRwsQqizCBjHs4Er5yVCJ2qfdrD4zwIelFX31l05mn6ptkUfjqtb8Dx1b4AYqDUIMIAiy6RUW36/CoBg=="
+}

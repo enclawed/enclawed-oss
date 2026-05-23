@@ -1,0 +1,60 @@
+{
+  "id": "mcp-google-workspace",
+  "name": "Google Workspace MCP bridge",
+  "description": "First-party Google Workspace MCP bridge: registers Gmail, Calendar, Drive, Chat, and People MCP endpoints with mcp-attested under a closed tool allowlist, using a shared OAuth bearer-token provider.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "tools": [
+    "google.gmail.create_draft",
+    "google.gmail.send_draft",
+    "google.gmail.search_threads",
+    "google.gmail.get_thread",
+    "google.gmail.list_labels",
+    "google.gmail.create_label",
+    "google.gmail.modify_thread_labels",
+    "google.calendar.create_event",
+    "google.calendar.list_events",
+    "google.calendar.get_event",
+    "google.calendar.update_event",
+    "google.calendar.delete_event",
+    "google.calendar.suggest_time",
+    "google.drive.search_files",
+    "google.drive.get_file",
+    "google.drive.create_file",
+    "google.drive.update_file",
+    "google.drive.share_file",
+    "google.chat.list_spaces",
+    "google.chat.list_messages",
+    "google.chat.create_message",
+    "google.people.list_contacts",
+    "google.people.search_contacts",
+    "google.people.get_contact"
+  ],
+  "env": {
+    "required-one-of": [
+      ["ENCLAWED_GOOGLE_OAUTH_TOKEN"],
+      [
+        "ENCLAWED_GOOGLE_OAUTH_CLIENT_ID",
+        "ENCLAWED_GOOGLE_OAUTH_CLIENT_SECRET",
+        "ENCLAWED_GOOGLE_OAUTH_REFRESH_TOKEN"
+      ]
+    ],
+    "scopes-suggested": [
+      "https://www.googleapis.com/auth/gmail.modify",
+      "https://www.googleapis.com/auth/calendar",
+      "https://www.googleapis.com/auth/drive",
+      "https://www.googleapis.com/auth/chat.messages",
+      "https://www.googleapis.com/auth/contacts.readonly"
+    ]
+  },
+  "endpoints": {
+    "gmail":    "https://gmailmcp.googleapis.com/mcp/v1",
+    "calendar": "https://calendarmcp.googleapis.com/mcp/v1",
+    "drive":    "https://drivemcp.googleapis.com/mcp/v1",
+    "chat":     "https://chatmcp.googleapis.com/mcp/v1",
+    "people":   "https://people.googleapis.com/mcp/v1"
+  }
+}

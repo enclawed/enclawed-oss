@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "deepgram",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "HjODKpWAXDqW31qSnNDUq5q4TV2KoYQ6uFRE3qegYgqt2vs2up3nZD7RkNe9XM52vFN+S8z+LqJX2CIfPnv0Bw=="
+}

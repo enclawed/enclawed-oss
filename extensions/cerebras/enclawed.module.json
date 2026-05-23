@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "cerebras",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.26",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "1bzLfCf5rNmmZsYAtNB/W0pNvePccqiJTnMxU92qwlMVvGs4c8nSHLoA+gtR+8VDEohJQARxJhrKy4YHEUGYDw=="
+}

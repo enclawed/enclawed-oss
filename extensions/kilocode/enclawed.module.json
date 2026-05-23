@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "kilocode",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "CWAoVVeRrKdiun3N4S4CtxhbdnQTC9zKB/G/QTTE9EOe/5aJA96g5UtoqqZ367Hezrs1mj9VCmhcIZ3wYF5sDg=="
+}

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "gradium",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "KBPN4Pyi1iT3YbZQx8yNYF/CXiLRbqcatxburytfuLgoq/MCmrV+HBSh+ZSIuwFVzAvNQqgOC74FMsIt317GAg=="
+}

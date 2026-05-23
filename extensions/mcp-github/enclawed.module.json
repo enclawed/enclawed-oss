@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "mcp-github",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "gDFEs3OkA/3eErVmYz8pZ5VcAoyIhYu+PJsnuJbp55I2i+oyHui+sgE+GnQIeaZQl/lKccGgSpQ1A0cBWjskAA=="
+}

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+IMAGE_NAME="${ENCLAWED_INSTALL_E2E_IMAGE:-enclawed-install-e2e:local}"
+INSTALL_URL="${ENCLAWED_INSTALL_URL:-https://enclawed.bot/install.sh}"
+
+OPENAI_API_KEY="${OPENAI_API_KEY:-}"
+ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}"
+ANTHROPIC_API_TOKEN="${ANTHROPIC_API_TOKEN:-}"
+ENCLAWED_E2E_MODELS="${ENCLAWED_E2E_MODELS:-}"
+
+echo "==> Build image: $IMAGE_NAME"
+docker build \
+  -t "$IMAGE_NAME" \
+  -f "$ROOT_DIR/scripts/docker/install-sh-e2e/Dockerfile" \
+  "$ROOT_DIR/scripts/docker"
+
+echo "==> Run E2E installer test"
+docker run --rm \
+  -e ENCLAWED_INSTALL_URL="$INSTALL_URL" \
+  -e ENCLAWED_INSTALL_TAG="${ENCLAWED_INSTALL_TAG:-latest}" \
+  -e ENCLAWED_E2E_MODELS="$ENCLAWED_E2E_MODELS" \
+  -e ENCLAWED_INSTALL_E2E_PREVIOUS="${ENCLAWED_INSTALL_E2E_PREVIOUS:-}" \
+  -e ENCLAWED_INSTALL_E2E_SKIP_PREVIOUS="${ENCLAWED_INSTALL_E2E_SKIP_PREVIOUS:-0}" \
+  -e ENCLAWED_NO_ONBOARD=1 \
+  -e OPENAI_API_KEY="$OPENAI_API_KEY" \
+  -e ANTHROPIC_API_KEY="$ANTHROPIC_API_KEY" \
+  -e ANTHROPIC_API_TOKEN="$ANTHROPIC_API_TOKEN" \
+  "$IMAGE_NAME"

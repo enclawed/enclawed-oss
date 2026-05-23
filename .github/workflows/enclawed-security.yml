@@ -1,0 +1,124 @@
+name: enclawed security
+
+# Runs the OSS-half framework + pen-test suites on every push and PR. The
+# standalone suites use only node:test and node:crypto, so this workflow
+# does NOT need `pnpm install` and stays fast (< 1 minute typical). The
+# closed-tree extensions (zero-trust key broker, mcp-attested module) are
+# tested in the sibling enclawed-enclaved workflow.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'src/enclawed/**'
+      - 'enclawed/**'
+      - '.github/workflows/enclawed-security.yml'
+  pull_request:
+    paths:
+      - 'src/enclawed/**'
+      - 'enclawed/**'
+      - '.github/workflows/enclawed-security.yml'
+  schedule:
+    # Re-run weekly so security tests catch supply-chain drift (Node, OpenSSL)
+    # even when no PRs touch the framework.
+    - cron: '0 4 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  unit-and-pen-tests:
+    name: framework unit + pen tests (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Verify framework has zero runtime dependencies
+        run: |
+          # The standalone framework must have no node_modules / no install
+          # step. If a dependency creeps in, fail the build so the
+          # security-review surface stays small.
+          if [ -d enclawed/node_modules ]; then
+            echo "::error::enclawed/node_modules unexpectedly present"
+            exit 1
+          fi
+          if [ ! -f enclawed/package.json ]; then
+            echo "::error::enclawed/package.json missing"
+            exit 1
+          fi
+          # Reject any dependency / devDependency keys.
+          node -e "const p=require('./enclawed/package.json');
+                   if (p.dependencies && Object.keys(p.dependencies).length) { console.error('deps not allowed', p.dependencies); process.exit(1); }
+                   if (p.devDependencies && Object.keys(p.devDependencies).length) { console.error('devDeps not allowed', p.devDependencies); process.exit(1); }"
+
+      - name: Run unit tests (standalone framework)
+        run: node --test enclawed/test/*.test.mjs
+
+      - name: Run security + pen tests
+        run: node --test enclawed/test/security/*.pentest.mjs
+
+      - name: Test summary
+        if: always()
+        run: |
+          echo "Standalone framework: $(ls enclawed/test/*.test.mjs | wc -l) files"
+          echo "Pen-test files: $(ls enclawed/test/security/*.pentest.mjs | wc -l) files"
+
+  typecheck:
+    name: TypeScript framework typecheck (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install ephemeral typecheck deps
+        run: |
+          mkdir -p /tmp/tscheck
+          npm install --no-save --prefix /tmp/tscheck typescript@5.6.3 @types/node@22
+
+      - name: Strict typecheck of enclawed framework
+        run: |
+          cd src/enclawed
+          /tmp/tscheck/node_modules/.bin/tsc \
+            --noEmit --strict \
+            --target ES2022 --module NodeNext --moduleResolution NodeNext \
+            --types /tmp/tscheck/node_modules/@types/node \
+            --skipLibCheck \
+            classification.ts classification-scheme.ts policy.ts \
+            egress-guard.ts audit-log.ts dlp-scanner.ts crypto-fips.ts \
+            zeroize.ts runtime.ts bootstrap.ts index.ts flavor.ts \
+            module-manifest.ts module-signing.ts trust-root.ts \
+            module-loader.ts prompt-shield.ts \
+            integration/preload.ts integration/module-loader-shim.ts
+
+  # Module-signature verification ran here when bundled signed modules
+  # lived in the OSS tree (mcp-attested). Since the OSS / enclaved split,
+  # signed modules ship from enclawed-enclaved; the equivalent job lives
+  # in the closed-tree workflow.
+
+  # The prior `npm-audit-upstream` job ran `pnpm install --frozen-lockfile`
+  # + `pnpm audit` against the inherited upstream Enclawed lockfile. It was
+  # redundant: the enclawed framework itself has zero runtime dependencies
+  # (enforced by `Verify framework has zero runtime dependencies` above),
+  # and auditing upstream's dep tree is upstream's responsibility. The job
+  # was advisory-only but surfaced spurious red Xs in the Actions UI due
+  # to lockfile-version mismatches with pnpm@10. Removed.

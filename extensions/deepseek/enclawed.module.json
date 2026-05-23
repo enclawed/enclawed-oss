@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "deepseek",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "qMDOS31sWrmdJV0WUnOugQZAwjjnvTlIaBxa/M90veb9aurls4yM/INnGr+YY2q7XjFRXoGPDDQZhT0yg1kBDA=="
+}

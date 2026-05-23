@@ -1,0 +1,15 @@
+{
+  "v": 1,
+  "id": "tlon",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "publish",
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "Yqy7dCrt6UBaCSqI7NDKzTWKyM0sLZ9coc5TKLJ+fL6MzhE6T6aL2ASPpctuSeW1be0XLcO1OWDskV+8UKOsBA=="
+}

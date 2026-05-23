@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "synology-chat",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "publish"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "0bPXPKYos8nNzO9HdDrTVbQbVVIFdoNJoZY91nlt9X+RnP7NuagzqmH97ds777AeQ14zJJ1hXISGzh1DX3KfDw=="
+}

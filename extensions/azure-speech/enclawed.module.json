@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "azure-speech",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "lr5ZcJTSkvMeMSZgGR9F9TOSbJt24Gpqf3mA3d0TOCz8Pogr3h/joEfnyXgUzPL4YOGQ0BB9XAb1G5MK32RPCQ=="
+}

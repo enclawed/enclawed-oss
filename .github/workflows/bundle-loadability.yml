@@ -1,0 +1,124 @@
+name: bundle-loadability
+
+# Catches plugin-load regressions in the published artifact (not just source).
+# Runs in three layers:
+#
+#   1. Static drift scan (always runs; same scan as the vitest counterpart
+#      under test/smoke/bundle-loadability.test.ts).
+#   2. Bundle-artifact verification (after `pnpm build`, every package.json
+#      ./plugin-sdk/* export must resolve to a real emitted file).
+#   3. Packaged-install doctor scan (npm-pack the freshly built tree into a
+#      tarball, install into a clean temp dir, run `enclawed plugins doctor
+#      --json`, and assert zero plugin failures outside an explicit
+#      version-floor allowlist).
+#
+# If you remove a plugin or a peer-dep that we know fails on this host
+# version, add its id to allow-plugin below.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "extensions/**"
+      - "packages/**"
+      - "scripts/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/bundle-loadability.yml"
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "src/**"
+      - "extensions/**"
+      - "packages/**"
+      - "scripts/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/bundle-loadability.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bundle-loadability-${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: post-bundle plugin smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "10.32.1"
+
+      # Layer 1: static drift scan. This is cheap and fails fast if extension
+      # source references a plugin-sdk subpath or value-symbol the closed-tree
+      # SDK no longer provides. We keep this OUTSIDE `--strict` here because
+      # the vitest counterpart (test/smoke/bundle-loadability.test.ts) already
+      # enforces the allowlist contract. Surfacing the report unconditionally
+      # makes regressions easier to triage from the workflow logs.
+      - name: Static drift scan
+        run: node scripts/ci/post-bundle-smoke.mjs
+
+      - name: Install deps
+        run: pnpm install --prefer-offline --frozen-lockfile
+
+      - name: Build
+        env:
+          ENCLAWED_A2UI_SKIP_MISSING: "1"
+        run: pnpm build
+
+      # Layer 2: bundle-artifact verification. Asserts every declared
+      # ./plugin-sdk/* export in package.json resolves to a real emitted file.
+      # Catches the regression class where a subpath gets added to exports but
+      # not to the build entry map.
+      - name: Verify built artifacts
+        run: node scripts/check-plugin-sdk-exports.mjs
+
+      - name: Pack tarball
+        run: npm pack --pack-destination ${{ runner.temp }}/bundle-loadability
+
+      # Layer 3: packaged-install doctor scan. Runs the freshly packed
+      # artifact through `enclawed plugins doctor --json` from a clean temp
+      # workspace. The --allow-plugin list pins known-orthogonal failures
+      # (peer-dep version floors etc.) so the gate stays honest.
+      - name: Packaged-install doctor scan
+        run: |
+          tarball=$(ls ${{ runner.temp }}/bundle-loadability/*.tgz | head -1)
+          echo "tarball: $tarball"
+          node scripts/ci/post-bundle-smoke.mjs --strict --tarball "$tarball" \
+            --allow-plugin amazon-bedrock \
+            --allow-plugin github-copilot \
+            --allow-plugin file-transfer \
+            --allow-plugin talk-voice \
+            --allow-plugin anthropic \
+            --allow-plugin codex \
+            --allow-plugin openai \
+            --allow-plugin google \
+            --allow-plugin byteplus \
+            --allow-plugin deepinfra \
+            --allow-plugin deepseek \
+            --allow-plugin fireworks \
+            --allow-plugin tencent \
+            --allow-plugin together \
+            --allow-plugin venice \
+            --allow-plugin volcengine \
+            --allow-plugin zai \
+            --allow-plugin litellm \
+            --allow-plugin openrouter \
+            --allow-plugin xai

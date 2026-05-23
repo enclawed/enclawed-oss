@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/duckduckgo-plugin",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed DuckDuckGo plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

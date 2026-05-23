@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "github-copilot",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "pFyxaW7Zqf4LMsjIT6PNFtVi3gYIp8CPxZ9OYhasPbvjFdfv2H+RXXLQkhUR0aSwbyZFj2hqkhLU3iDyjaXaCQ=="
+}

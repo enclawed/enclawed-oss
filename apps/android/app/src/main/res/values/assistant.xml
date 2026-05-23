@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="ask_enclawed_query_patterns">
+        <item>ask Enclawed $prompt</item>
+        <item>tell Enclawed to $prompt</item>
+        <item>open Enclawed and ask $prompt</item>
+    </string-array>
+</resources>

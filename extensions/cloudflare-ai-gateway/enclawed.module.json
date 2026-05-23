@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "cloudflare-ai-gateway",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "EBJB9jq+KeQLqpm2cBFVnSCapSnx57uKTyrnIw1sEgIQGsCxqklctIv9xmiyVTgh+IQPZTJHJSWpB3bMpvV+AQ=="
+}

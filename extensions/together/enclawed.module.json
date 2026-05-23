@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "together",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "ZYY/Iau7Lkd5Uw/DXZr/K5kAC2I6uJ86sMRFd7p+L/KyiiuWre2KGMt/26zxnnGIJBIxwSYb67E2n0twyA8rDQ=="
+}

@@ -1,0 +1,68 @@
+name: CodeQL
+
+# GitHub's native SAST engine, scoped to enclawed-owned source (see
+# .github/codeql/codeql-config.yml for the path filter and the
+# security-extended query set). Results appear under the repo Security
+# tab and are attached to PRs as review annotations.
+#
+# Triggers are aligned with enclawed-security.yml so every change that
+# could affect the framework is scanned, plus a weekly cron to catch
+# new queries added to the security-extended suite over time.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'src/enclawed/**'
+      - 'enclawed/**'
+      - '.github/workflows/codeql.yml'
+      - '.github/codeql/**'
+  pull_request:
+    paths:
+      - 'src/enclawed/**'
+      - 'enclawed/**'
+      - '.github/workflows/codeql.yml'
+      - '.github/codeql/**'
+  schedule:
+    # Weekly Monday 05:00 UTC — one hour after enclawed-security.yml's
+    # cron so the two don't contend for runner capacity.
+    - cron: '0 5 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: CodeQL SAST (javascript-typescript)
+    runs-on: ubuntu-latest
+    # security-events:write is required to upload SARIF results to the
+    # Security tab. actions:read is used by the action to read workflow
+    # metadata. contents:read is the default checkout scope.
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          # Interpreted-language scan: no install step, no build. The
+          # enclawed framework has zero runtime deps so this is the
+          # correct mode anyway; making it explicit avoids CodeQL
+          # attempting a pnpm install against the inherited upstream
+          # lockfile (which fails with ERR_PNPM_LOCKFILE_CONFIG_MISMATCH).
+          build-mode: none
+          config-file: .github/codeql/codeql-config.yml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"

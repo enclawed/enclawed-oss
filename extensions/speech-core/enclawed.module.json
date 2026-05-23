@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "speech-core",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "siNmP+PZWA7HXGPlUkwEVxjeilRtlXichJMUAY0c0wUsf3H+wemeY1NvQjXnSJddWjjJRpX8anqNkB/y7AviCQ=="
+}

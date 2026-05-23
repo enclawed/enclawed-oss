@@ -1,0 +1,41 @@
+{
+  "name": "@enclawed/voice-call",
+  "version": "2026.4.25",
+  "description": "Enclawed voice-call plugin",
+  "type": "module",
+  "dependencies": {
+    "commander": "^14.0.3",
+    "typebox": "1.1.37",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "install": {
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    },
+    "build": {
+      "enclawedVersion": "2026.4.25"
+    },
+    "release": {
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}

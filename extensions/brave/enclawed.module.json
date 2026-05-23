@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "brave",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "i1uJZBoT90eE79UMDlmYb6/7RXdia7exKuXIwsIG6E+kef3BaB1JIbjtJ5AzBCr6kiRCkhwdpyMpRqs6vEUtCA=="
+}

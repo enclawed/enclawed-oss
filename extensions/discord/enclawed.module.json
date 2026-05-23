@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "discord",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "publish"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "jZifiFH5jMwq9ZYM1XyG4cJT65KxF7YN7rkxJvaS3+aeQG1J75vFnHE2HtfOwuEZgxg0ZU17Z+Hpj38PlPFhBA=="
+}

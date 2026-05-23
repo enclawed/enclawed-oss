@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "openrouter",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "P02EjzieJNBBHwz7eVkzmUpZX6b/TNoSLF3S5mWFkMQDS4drjR7LxL3nJ68dj/jY5b7j2IL9/fkWmBzWA82yDg=="
+}

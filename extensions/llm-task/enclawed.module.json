@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "llm-task",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "jTaTJyWiqM6ZHicDUt5ABjw+zZ9lJ5nJ/lG7Ojq6MHU9XwT9kXeWQgW8ANdkBfMKhMiPz8doBHVdwdXCkSExCw=="
+}

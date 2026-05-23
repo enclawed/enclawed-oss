@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "migrate-hermes",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "teV3dz7TDZilH4PmOcauY/FaiyDMku4u1TN+njB9Ma4A8gwCrnUsLMyOA+B46K1m1pQ1xKHQG8dUY1/iU0L5BA=="
+}

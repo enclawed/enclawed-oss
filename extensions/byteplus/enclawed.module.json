@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "byteplus",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "16Ne8HA+8XnQ0WVY1fYjFAdXhR66kbPNj/NLs9MRBj0ryGfxz/v0YkDgZEFUF/LjSVkoyB0qXyPCL5elwDFUCw=="
+}

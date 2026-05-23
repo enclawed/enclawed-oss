@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "tencent",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "1bkYB5UvSlD4/dXPAeF7E3BU8rPRmA1V8cUEcb2vdoTPM/FNyK8OKqejaxXWRKJrb0S3MIxKX2n1AHVC5X4iBQ=="
+}

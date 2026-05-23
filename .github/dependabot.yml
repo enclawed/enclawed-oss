@@ -1,0 +1,30 @@
+# Minimal Dependabot config for the enclawed-oss fork.
+#
+# Upstream Enclawed's dependabot.yml covered npm, Swift (macOS /
+# MoltbotKit / Swabble), Android Gradle, Docker, and GitHub Actions. Of
+# those, only the GitHub Actions surface is relevant to enclawed:
+#   - enclawed's framework has zero npm runtime dependencies (enforced
+#     by .github/workflows/enclawed-security.yml).
+#   - No Swift / macOS / iOS / Android / Docker artifacts ship from
+#     this repo --- that surface is all upstream Enclawed product scope.
+#
+# The only real supply-chain surface for enclawed is the GitHub Actions
+# used by .github/workflows/enclawed-security.yml (actions/checkout,
+# actions/setup-node). Monitor that surface weekly, in one grouped PR,
+# with a small open-PR cap so noise stays bounded.
+
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch

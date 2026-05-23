@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "document-extract",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "Cw2pgNsfvC7QOVIgggA+kYedQnj31S6YCvMsXCQGc9Qh6k5Jcd29GCnEm02CcddbeQwr9/hVsC6Cx+PBozvsDg=="
+}

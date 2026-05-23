@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "web-readability",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "fs.read"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "tAiit/CrlI1RFRdqmKg8lALfpDBxLvE/nBsRNAlrbneEOowgSf9cTISXu2RGmyHbPC07LvF1LqUHgK7vqp9fDw=="
+}

@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "chutes",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "4I9I+kb7fJb47GDdbzfxjjito1UG4z3AdvDc9SG21Amfjm0LXrqNc+L/qNN/6X7vakMLZG/Ao00ofvu/llllBQ=="
+}

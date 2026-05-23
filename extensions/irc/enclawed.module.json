@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "irc",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "publish"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "Qwhq2YnZe2u+JhScFRzVuzTeNkmYCPrZ4dlOJSebSnWaKZ4NbDxAEC29Z/idG+hJaTD2rTHGb1XLm9nyRcsbDQ=="
+}

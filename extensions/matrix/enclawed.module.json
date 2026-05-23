@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "matrix",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "publish"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "UZxhOc174aOtaBZqwAo+2l3DK8GnOIxQCK1ASDjUUfQI+WyGofI8ahluxTJbVexO9LjULKnzxtCTg/jZ+vetDA=="
+}

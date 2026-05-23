@@ -1,0 +1,14 @@
+{
+  "v": 1,
+  "id": "anthropic",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": [
+    "tool.invoke"
+  ],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "HRoZIOQpOg6ZQmfQhYqpC4hIaYDyY0ZjKUDvbjIatq/pPVpzNFIqYhggt4lFosh/pWcucfRMWRHGae+KlBrfCA=="
+}
