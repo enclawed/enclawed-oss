@@ -11,7 +11,7 @@
   "dependencies": {
     "imapflow": "^1.0.196",
     "mailparser": "^3.7.5",
-    "nodemailer": "^7.0.10"
+    "nodemailer": "^8.0.5"
   },
   "devDependencies": {
     "@types/nodemailer": "^7.0.4"
