@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "runway",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "iSGsRiGuRDwZ7VtAV5ynUYlAxsl3VT/iSn4/Z7C20cGFG7LW398+d785p44shxtbHeNth2CwHXlXPHZF1jUMAg=="
+}

@@ -1,0 +1,10 @@
+import type { EnclawedConfig } from "../config/types.enclawed.js";
+import { AcpRuntimeError } from "./runtime/errors.js";
+export type AcpDispatchPolicyState = "enabled" | "acp_disabled" | "dispatch_disabled";
+export declare function isAcpEnabledByPolicy(cfg: EnclawedConfig): boolean;
+export declare function resolveAcpDispatchPolicyState(cfg: EnclawedConfig): AcpDispatchPolicyState;
+export declare function isAcpDispatchEnabledByPolicy(cfg: EnclawedConfig): boolean;
+export declare function resolveAcpDispatchPolicyMessage(cfg: EnclawedConfig): string | null;
+export declare function resolveAcpDispatchPolicyError(cfg: EnclawedConfig): AcpRuntimeError | null;
+export declare function isAcpAgentAllowedByPolicy(cfg: EnclawedConfig, agentId: string): boolean;
+export declare function resolveAcpAgentPolicyError(cfg: EnclawedConfig, agentId: string): AcpRuntimeError | null;

@@ -1,0 +1,17 @@
+{
+  "name": "@enclawed/acpx",
+  "version": "2026.4.16",
+  "description": "Enclawed ACP runtime backend",
+  "type": "module",
+  "dependencies": {
+    "acpx": "0.5.3"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

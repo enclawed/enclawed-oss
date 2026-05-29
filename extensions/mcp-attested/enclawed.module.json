@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mcp-attested",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "aNrUplNM9VuQZyfIKwREPqYTAYQQyHwXzoheUr+XvdCjgQx95MhG2gSyGbFBOKYyvYmw4m7km5M3iig+/E0ZAg=="
+}

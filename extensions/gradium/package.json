@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/gradium-speech",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Gradium speech plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

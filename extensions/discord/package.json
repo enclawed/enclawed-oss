@@ -1,0 +1,71 @@
+{
+  "name": "@enclawed/discord",
+  "version": "2026.4.25",
+  "description": "Enclawed Discord channel plugin",
+  "type": "module",
+  "dependencies": {
+    "discord-api-types": "^0.38.47",
+    "https-proxy-agent": "^9.0.0",
+    "opusscript": "^0.1.1",
+    "typebox": "1.1.37",
+    "undici": "8.1.0",
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "@discordjs/voice": {
+      "optional": true
+    },
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "discord",
+      "label": "Discord",
+      "selectionLabel": "Discord (Bot API)",
+      "detailLabel": "Discord Bot",
+      "docsPath": "/channels/discord",
+      "docsLabel": "discord",
+      "blurb": "very well supported right now.",
+      "systemImage": "bubble.left.and.bubble.right",
+      "markdownCapable": true,
+      "commands": {
+        "nativeCommandsAutoEnabled": true,
+        "nativeSkillsAutoEnabled": true
+      },
+      "configuredState": {
+        "specifier": "./configured-state",
+        "exportName": "hasDiscordConfiguredState"
+      }
+    },
+    "install": {
+      "npmSpec": "@enclawed/discord",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    },
+    "build": {
+      "enclawedVersion": "2026.4.25"
+    },
+    "release": {
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}

@@ -1,0 +1,53 @@
+# Example nftables ruleset — RT-10 closure for the secretary demo.
+#
+# Pair this with the secretary's `policy.allowedHosts` set. Drop into a
+# Docker container or a `systemd-nspawn` network namespace; do NOT run
+# on a developer workstation that needs general egress.
+#
+# Resolve the hostnames once at install time and pin the IPs here —
+# nftables doesn't do DNS, and we want the rules to fail closed if
+# Google ever changes a CNAME.
+
+table inet enclawed_secretary_egress {
+    # Defined sets — the CIDRs below are Google's published frontend
+    # netblocks as of 2026-05; re-resolve before deploying since Google
+    # rotates ranges. To refresh:
+    #   getent ahosts gmailmcp.googleapis.com calendarmcp.googleapis.com \
+    #                 people.googleapis.com oauth2.googleapis.com
+    # produce a current pin list, then `nft -f` reload.
+    set google_allow_v4 {
+        type ipv4_addr
+        flags interval
+        elements = { 142.250.0.0/16, 172.217.0.0/16, 216.58.192.0/19, 64.233.160.0/19 }
+    }
+    set google_allow_v6 {
+        type ipv6_addr
+        flags interval
+        elements = { 2607:f8b0::/32, 2a00:1450::/32 }
+    }
+
+    chain output {
+        type filter hook output priority 0; policy drop;
+
+        # Allow loopback (Ollama on 127.0.0.1, audit-log writers).
+        oif lo accept
+        ip daddr 127.0.0.0/8 accept
+        ip6 daddr ::1 accept
+
+        # Allow established/related so reply traffic can flow.
+        ct state established,related accept
+
+        # Allow DNS (UDP/TCP 53) only to the system resolver, so the
+        # Node runtime can resolve the four allowed hostnames once.
+        # Replace the resolver IP with your own if you've hardened it.
+        ip daddr 1.1.1.1 udp dport 53 accept
+        ip daddr 1.1.1.1 tcp dport 53 accept
+
+        # Allow HTTPS to the pinned Google subnets.
+        ip daddr @google_allow_v4 tcp dport 443 accept
+        ip6 daddr @google_allow_v6 tcp dport 443 accept
+
+        # Everything else is dropped by the chain's default policy.
+        log prefix "enclawed-egress-drop: " level warn
+    }
+}

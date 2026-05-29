@@ -1,0 +1,17 @@
+{
+  "id": "mcp-carddav",
+  "name": "CardDAV MCP bridge",
+  "description": "Protocol-level CardDAV MCP bridge bound to an app-specific password. Two tools (search_contacts, list_contacts) implemented over RFC 6352 CardDAV (REPORT addressbook-query). Provider-agnostic; accepts any IETF-compliant CardDAV host.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "tools": ["search_contacts", "list_contacts"],
+  "env": {
+    "required": ["ENCLAWED_IMAP_APP_PASSWORD", "ENCLAWED_SECRETARY_PRINCIPAL_EMAIL"]
+  },
+  "endpoints": {
+    "synthetic": "mcp+carddav://"
+  }
+}

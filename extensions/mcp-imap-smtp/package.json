@@ -1,0 +1,27 @@
+{
+  "name": "@enclawed/mcp-imap-smtp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bundled bridge: protocol-level IMAP + SMTP MCP server. Translates the MCP tools/call envelope into IMAP IDLE/SEARCH/FETCH/APPEND/STORE and SMTP message-send, authenticated by a single app-specific password. Works against Gmail, Fastmail, iCloud, Proton (via Bridge), or any IETF-compliant IMAP/SMTP host.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "imapflow": "^1.0.196",
+    "mailparser": "^3.7.5",
+    "nodemailer": "^7.0.10"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^7.0.4"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "enclawed": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  }
+}

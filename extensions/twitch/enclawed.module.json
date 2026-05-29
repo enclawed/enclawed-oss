@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "twitch",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "avWDW5QgOERDUUIepIEK2xnf83pSGVuNtRnsJrTr9GkN6Kh+EKZwSI1b3y37NFToCV4Bt4/psociKwjHmnE/AA=="
+}

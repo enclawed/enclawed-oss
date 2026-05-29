@@ -1,0 +1,22 @@
+// Default signing values for shared/repo builds.
+// Auto-selected local team overrides live in .local-signing.xcconfig (git-ignored).
+// Manual local overrides can go in LocalSigning.xcconfig (git-ignored).
+
+#include "Config/Version.xcconfig"
+
+ENCLAWED_CODE_SIGN_STYLE = Manual
+ENCLAWED_DEVELOPMENT_TEAM = Y5PE65HELJ
+
+ENCLAWED_APP_BUNDLE_ID = ai.enclawed.client
+ENCLAWED_SHARE_BUNDLE_ID = ai.enclawed.client.share
+ENCLAWED_WATCH_APP_BUNDLE_ID = ai.enclawed.client.watchkitapp
+ENCLAWED_WATCH_EXTENSION_BUNDLE_ID = ai.enclawed.client.watchkitapp.extension
+ENCLAWED_ACTIVITY_WIDGET_BUNDLE_ID = ai.enclawed.client.activitywidget
+
+ENCLAWED_APP_PROFILE = ai.enclawed.client Development
+ENCLAWED_SHARE_PROFILE = ai.enclawed.client.share Development
+
+// Keep local includes after defaults: xcconfig is evaluated top-to-bottom,
+// so later assignments in local files override the defaults above.
+#include? ".local-signing.xcconfig"
+#include? "LocalSigning.xcconfig"

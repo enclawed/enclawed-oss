@@ -1,0 +1,176 @@
+packages:
+  - .
+  - ui
+  - packages/*
+  - extensions/*
+  - enclawed-apps/*
+  # qa-matrix references @enclawed/matrix which was stripped from this fork
+  # (cloud channel removed by the enclaved-flavor security policy). The
+  # dangling QA fixture is excluded from the workspace.
+  - "!extensions/qa-matrix"
+
+# Per-install platform scoping. Without this, pnpm dutifully downloads
+# every platform-specific binary that any workspace package declares as
+# an optional dep — sharp/napi-canvas/codex/llama-cpp/lancedb/rolldown/
+# typescript-native each ship 8–12 OS×arch×libc variants, which on a
+# fresh install pulls ~2 GB of binaries that will never run because the
+# matching one is already on disk. `current` collapses each set to the
+# single (os, cpu, libc) tuple of the machine running pnpm install.
+supportedArchitectures:
+  os:
+    - current
+  cpu:
+    - current
+  libc:
+    - current
+
+minimumReleaseAge: 2880
+
+minimumReleaseAgeExclude:
+  - "acpx"
+  - "axios"
+  - "basic-ftp"
+  - "hono"
+  - "enclawed"
+  - "protobufjs"
+  - "@buape/carbon"
+  - "vite"
+  - "@cloudflare/workers-types"
+  - "@hono/node-server"
+  - "@mariozechner/*"
+  - "@typescript/native-preview*"
+  - "@types/node"
+  - "@rolldown/*"
+  - "@oxlint/*"
+  - "@oxfmt/*"
+  - "axios@1.15.0"
+  - "discord-api-types"
+  - "rolldown"
+  - "sqlite-vec"
+  - "sqlite-vec-*"
+
+onlyBuiltDependencies:
+  - "@discordjs/opus"
+  - "@lydell/node-pty"
+  - "@matrix-org/matrix-sdk-crypto-nodejs"
+  - "@napi-rs/canvas"
+  - "@tloncorp/api"
+  - "@tloncorp/tlon-skill"
+  - "@whiskeysockets/baileys"
+  - authenticate-pam
+  - esbuild
+  - node-llama-cpp
+  - protobufjs
+  - sharp
+
+ignoredBuiltDependencies:
+  - koffi
+
+# Version pins migrated from the now-ignored package.json `pnpm.overrides`
+# block.  Every entry here is either (a) a CVE-driven pin or (b) a known
+# floor for upstream regressions.  Bumping or removing any of these is a
+# security-relevant change — review against the audit log before touching.
+overrides:
+  "@anthropic-ai/sdk": "0.91.1"
+  hono: "4.12.18"
+  "@hono/node-server": "1.19.14"
+  axios: "1.15.2"
+  follow-redirects: "1.16.0"
+  # html-encoding-sniffer@6 dropped whatwg-encoding (whole-package
+  # deprecated) and uses @exodus/bytes instead. Pinning here forces
+  # jsdom (vitest dev-dep) and any other consumer off the deprecated
+  # transitive.
+  html-encoding-sniffer: "^6"
+  defu: "6.1.5"
+  fast-xml-parser: "5.7.0"
+  request: "npm:@cypress/request@3.0.10"
+  request-promise: "npm:@cypress/request-promise@5.0.0"
+  basic-ftp: "5.3.1"
+  file-type: "22.0.1"
+  # form-data 2.x is deprecated upstream; 4.x has the same security
+  # fixes plus a maintained release line. The 2.x pin used to be here
+  # for compat with an older consumer that no longer ships.
+  form-data: "^4.0"
+  minimatch: "10.2.4"
+  path-to-regexp: "8.4.0"
+  qs: "6.15.2"
+  node-domexception: "npm:@nolyfill/domexception@^1.0.28"
+  "@sinclair/typebox": "0.34.49"
+  tar: "7.5.13"
+  tough-cookie: "4.1.3"
+  yauzl: "3.2.1"
+  protobufjs: "7.5.8"
+  brace-expansion: "5.0.6"
+  "ws@>=8.0.0 <8.20.1": "8.20.1"
+  fast-uri: "3.1.2"
+  fast-xml-builder: "1.1.7"
+  "@opentelemetry/sdk-node": "^0.217.0"
+  "@opentelemetry/exporter-prometheus": "^0.217.0"
+  uuid: "13.0.1"
+  ip-address: "10.1.1"
+  # Deprecated-transitive cleanup. Each entry is the latest non-deprecated
+  # version of a package whose previous transitive resolution triggered a
+  # pnpm deprecation warning. Bumping any of these is verified to keep
+  # the install green before the snapshot — if a consumer breaks on a
+  # newer major, narrow this rule and pin the offending parent instead.
+  "@smithy/util-retry": "^4.4"
+  # glob older than 13 is deprecated for known CVEs; 13.x is the
+  # maintained line.
+  glob: "^13"
+  rimraf: "^6"
+  # node-gyp 11+ dropped the npm-internal logging cluster
+  # (npmlog, gauge, are-we-there-yet, inflight). Pinning here
+  # forces every native-builder consumer to use the new tree.
+  node-gyp: "^11"
+  # @discordjs/opus ships its own fork of node-pre-gyp pinned at 0.4.x,
+  # which in turn drags in the deprecated npmlog / gauge /
+  # are-we-there-yet cluster. The upstream successor is the actively
+  # maintained @mapbox/node-pre-gyp; pnpm understands the `npm:`
+  # prefix to swap the name. Discord channel is not used by the
+  # secretary; opusscript covers the audio side.
+  "@discordjs/node-pre-gyp": "npm:@mapbox/node-pre-gyp@^2"
+  # has-own was deprecated in favour of Object.hasOwn(); `hasown` is
+  # the official maintained alternative with a compatible surface.
+  has-own: "npm:hasown@^2"
+  # The @mariozechner/pi-* family was renamed upstream to
+  # @earendil-works/pi-*. The 0.73.x line of the old name still
+  # publishes a deprecation pointing at the new name; redirect every
+  # consumer at the new package.
+  "@mariozechner/pi-agent-core": "npm:@earendil-works/pi-agent-core@latest"
+  "@mariozechner/pi-ai": "npm:@earendil-works/pi-ai@latest"
+  "@mariozechner/pi-coding-agent": "npm:@earendil-works/pi-coding-agent@latest"
+
+# packageExtensions add missing peer/optional dependencies the upstream
+# package author forgot to declare.  Migrated from the ignored
+# package.json `pnpm.packageExtensions`.
+packageExtensions:
+  "@mariozechner/pi-coding-agent":
+    dependencies:
+      strip-ansi: "^7.2.0"
+
+# Reserved for source-patched dependencies; empty for now but keep the
+# key explicit so a missing block does not look like a missed migration.
+patchedDependencies: {}
+
+# Peer-dependency rules — narrow, audited, per-mismatch. Each entry
+# below documents WHY the upstream peer requirement is being relaxed
+# in this workspace. Do not add a rule here without writing the
+# justification next to it.
+peerDependencyRules:
+  allowedVersions:
+    # madge 8.x declares peer typescript@^5.4.4 but the repo has
+    # standardised on typescript 6.x for the framework + tooling.
+    # madge only runs at dev time (dependency graph reports) and
+    # works fine under TS 6 in practice.
+    typescript: "*"
+    # @vitest/coverage-v8 and vitest are released together but pnpm
+    # sometimes resolves them at adjacent patch versions in a
+    # workspace this size. Aligning them is a chore for every dep
+    # bump; the mismatch has no observable effect on coverage output.
+    vitest: "*"
+    "@vitest/coverage-v8": "*"
+    # prism-media (a transitive of @discordjs/voice) wants the legacy
+    # opusscript 0.0.x; the repo has 0.1.1 instead. The Discord
+    # channel is not loaded by the secretary app — this only matters
+    # for operators who wire Discord, and 0.1.x is a drop-in.
+    opusscript: "*"

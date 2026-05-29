@@ -1,0 +1,45 @@
+{
+  "id": "secretary",
+  "name": "AI Secretary",
+  "package": "enclawed-secretary-app",
+  "provider": {
+    "type": "imap-caldav-carddav",
+    "services": ["mail", "calendar", "contacts"],
+    "appPasswordUrl": "https://myaccount.google.com/apppasswords",
+    "imap": {
+      "host": "imap.gmail.com",
+      "port": 993,
+      "secure": true
+    },
+    "smtp": {
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "secure": true
+    },
+    "caldav": {
+      "serverUrl": "https://apidata.googleusercontent.com/caldav/v2/"
+    },
+    "carddav": {
+      "serverUrl": "https://www.googleapis.com/"
+    }
+  },
+  "llm": {
+    "type": "ollama",
+    "model": "qwen2.5:7b-instruct"
+  },
+  "principal": {
+    "envVar": "ENCLAWED_SECRETARY_PRINCIPAL_EMAIL",
+    "prompt": "Email address the secretary will reply on behalf of"
+  },
+  "service": {
+    "id": "com.enclawed.secretary",
+    "description": "Enclawed AI Secretary",
+    "extraEnv": {
+      "ENCLAWED_FIPS_REQUIRED": "0",
+      "ENCLAWED_FLAVOR": "open"
+    }
+  },
+  "labels": [{ "name": "enclawed/processed" }, { "name": "enclawed/auto-trash-eod" }],
+  "docsUrl": "https://www.enclawed.com/enclawed-apps/secretary",
+  "serviceReady": true
+}
