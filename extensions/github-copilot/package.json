@@ -1,0 +1,19 @@
+{
+  "name": "@enclawed/github-copilot-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed GitHub Copilot provider plugin",
+  "type": "module",
+  "dependencies": {
+    "@clack/prompts": "^1.3.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "@mariozechner/pi-ai": "0.71.1"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

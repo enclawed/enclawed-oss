@@ -1,0 +1,17 @@
+{
+  "id": "mcp-imap-smtp",
+  "name": "IMAP + SMTP MCP bridge",
+  "description": "Protocol-level IMAP + SMTP MCP server bound to an app-specific password. Five tools mapping to the canonical Gmail-style surface (search_threads, get_thread, create_draft, send_draft, modify_thread_labels), implemented over IMAPrev1 + Gmail extensions (X-GM-RAW / X-GM-THRID / X-GM-LABELS) and SMTPS. Provider-agnostic at the protocol level; the bridge accepts any IETF-compliant IMAP/SMTP host.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "tools": ["search_threads", "get_thread", "create_draft", "send_draft", "modify_thread_labels"],
+  "env": {
+    "required": ["ENCLAWED_IMAP_APP_PASSWORD", "ENCLAWED_SECRETARY_PRINCIPAL_EMAIL"]
+  },
+  "endpoints": {
+    "synthetic": "mcp+imap://"
+  }
+}

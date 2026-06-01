@@ -1,0 +1,130 @@
+import { i as stringEnum, r as optionalStringEnum } from "./typebox-DiOC0WMo.js";
+import "./channel-actions-DMyixEbu.js";
+import { H as _Object_, O as Boolean, X as Optional, g as String, q as _Array_, v as Number } from "./build-D6ni3YJD.js";
+//#region extensions/browser/src/browser-tool.schema.ts
+const BROWSER_ACT_KINDS = [
+	"click",
+	"clickCoords",
+	"type",
+	"press",
+	"hover",
+	"drag",
+	"select",
+	"fill",
+	"resize",
+	"wait",
+	"evaluate",
+	"close"
+];
+const BROWSER_TOOL_ACTIONS = [
+	"doctor",
+	"status",
+	"start",
+	"stop",
+	"profiles",
+	"tabs",
+	"open",
+	"focus",
+	"close",
+	"snapshot",
+	"screenshot",
+	"navigate",
+	"console",
+	"pdf",
+	"upload",
+	"dialog",
+	"act"
+];
+const BROWSER_TARGETS = [
+	"sandbox",
+	"host",
+	"node"
+];
+const BROWSER_SNAPSHOT_FORMATS = ["aria", "ai"];
+const BROWSER_SNAPSHOT_MODES = ["efficient"];
+const BROWSER_SNAPSHOT_REFS = ["role", "aria"];
+const BROWSER_IMAGE_TYPES = ["png", "jpeg"];
+const BrowserActSchema = _Object_({
+	kind: stringEnum(BROWSER_ACT_KINDS),
+	targetId: Optional(String()),
+	ref: Optional(String()),
+	doubleClick: Optional(Boolean()),
+	button: Optional(String()),
+	modifiers: Optional(_Array_(String())),
+	x: Optional(Number()),
+	y: Optional(Number()),
+	text: Optional(String()),
+	submit: Optional(Boolean()),
+	slowly: Optional(Boolean()),
+	key: Optional(String()),
+	delayMs: Optional(Number()),
+	startRef: Optional(String()),
+	endRef: Optional(String()),
+	values: Optional(_Array_(String())),
+	fields: Optional(_Array_(_Object_({}, { additionalProperties: true }))),
+	width: Optional(Number()),
+	height: Optional(Number()),
+	timeMs: Optional(Number()),
+	selector: Optional(String()),
+	url: Optional(String()),
+	loadState: Optional(String()),
+	textGone: Optional(String()),
+	timeoutMs: Optional(Number()),
+	fn: Optional(String())
+});
+const BrowserToolSchema = _Object_({
+	action: stringEnum(BROWSER_TOOL_ACTIONS),
+	target: optionalStringEnum(BROWSER_TARGETS),
+	node: Optional(String()),
+	profile: Optional(String()),
+	targetUrl: Optional(String()),
+	url: Optional(String()),
+	targetId: Optional(String()),
+	label: Optional(String()),
+	limit: Optional(Number()),
+	maxChars: Optional(Number()),
+	mode: optionalStringEnum(BROWSER_SNAPSHOT_MODES),
+	snapshotFormat: optionalStringEnum(BROWSER_SNAPSHOT_FORMATS),
+	refs: optionalStringEnum(BROWSER_SNAPSHOT_REFS),
+	interactive: Optional(Boolean()),
+	compact: Optional(Boolean()),
+	depth: Optional(Number()),
+	selector: Optional(String()),
+	frame: Optional(String()),
+	labels: Optional(Boolean()),
+	urls: Optional(Boolean()),
+	fullPage: Optional(Boolean()),
+	ref: Optional(String()),
+	element: Optional(String()),
+	type: optionalStringEnum(BROWSER_IMAGE_TYPES),
+	level: Optional(String()),
+	paths: Optional(_Array_(String())),
+	inputRef: Optional(String()),
+	timeoutMs: Optional(Number()),
+	accept: Optional(Boolean()),
+	promptText: Optional(String()),
+	kind: Optional(stringEnum(BROWSER_ACT_KINDS)),
+	doubleClick: Optional(Boolean()),
+	button: Optional(String()),
+	modifiers: Optional(_Array_(String())),
+	x: Optional(Number()),
+	y: Optional(Number()),
+	text: Optional(String()),
+	submit: Optional(Boolean()),
+	slowly: Optional(Boolean()),
+	key: Optional(String()),
+	delayMs: Optional(Number()),
+	startRef: Optional(String()),
+	endRef: Optional(String()),
+	values: Optional(_Array_(String())),
+	fields: Optional(_Array_(_Object_({}, { additionalProperties: true }))),
+	width: Optional(Number()),
+	height: Optional(Number()),
+	timeMs: Optional(Number()),
+	textGone: Optional(String()),
+	loadState: Optional(String()),
+	fn: Optional(String()),
+	request: Optional(BrowserActSchema)
+});
+//#endregion
+export { BrowserToolSchema as t };

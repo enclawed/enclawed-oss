@@ -1,0 +1,354 @@
+name: Enclawed
+options:
+  bundleIdPrefix: ai.enclawed
+  deploymentTarget:
+    iOS: "18.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+
+packages:
+  EnclawedKit:
+    path: ../shared/EnclawedKit
+  Swabble:
+    path: ../../Swabble
+
+schemes:
+  Enclawed:
+    shared: true
+    build:
+      targets:
+        Enclawed: all
+    test:
+      targets:
+        - EnclawedTests
+        - EnclawedLogicTests
+  EnclawedLogicTests:
+    shared: true
+    build:
+      targets:
+        EnclawedLogicTests: all
+    test:
+      targets:
+        - EnclawedLogicTests
+
+targets:
+  Enclawed:
+    type: application
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Sources
+    dependencies:
+      - target: EnclawedShareExtension
+        embed: true
+      - target: EnclawedActivityWidget
+        embed: true
+      - target: EnclawedWatchApp
+      - package: EnclawedKit
+      - package: EnclawedKit
+        product: EnclawedChatUI
+      - package: EnclawedKit
+        product: EnclawedProtocol
+      - package: Swabble
+        product: SwabbleKit
+      - sdk: AppIntents.framework
+    preBuildScripts:
+      - name: SwiftFormat (lint)
+        basedOnDependencyAnalysis: false
+        inputFileLists:
+          - $(SRCROOT)/SwiftSources.input.xcfilelist
+        script: |
+          set -euo pipefail
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          if ! command -v swiftformat >/dev/null 2>&1; then
+            echo "error: swiftformat not found (brew install swiftformat)" >&2
+            exit 1
+          fi
+          swiftformat --lint --config "$SRCROOT/../../.swiftformat" \
+            --filelist "$SRCROOT/SwiftSources.input.xcfilelist"
+      - name: SwiftLint
+        basedOnDependencyAnalysis: false
+        inputFileLists:
+          - $(SRCROOT)/SwiftSources.input.xcfilelist
+        script: |
+          set -euo pipefail
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          if ! command -v swiftlint >/dev/null 2>&1; then
+            echo "error: swiftlint not found (brew install swiftlint)" >&2
+            exit 1
+          fi
+          swiftlint lint --config "$SRCROOT/.swiftlint.yml" --use-script-input-file-lists
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_ENTITLEMENTS: Sources/Enclawed.entitlements
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(ENCLAWED_APP_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(ENCLAWED_APP_PROFILE)"
+        TARGETED_DEVICE_FAMILY: "1"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+      configs:
+        Debug:
+          ENCLAWED_PUSH_TRANSPORT: direct
+          ENCLAWED_PUSH_DISTRIBUTION: local
+          ENCLAWED_PUSH_RELAY_BASE_URL: ""
+          ENCLAWED_PUSH_APNS_ENVIRONMENT: sandbox
+        Release:
+          ENCLAWED_PUSH_TRANSPORT: direct
+          ENCLAWED_PUSH_DISTRIBUTION: local
+          ENCLAWED_PUSH_RELAY_BASE_URL: ""
+          ENCLAWED_PUSH_APNS_ENVIRONMENT: production
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Enclawed
+        CFBundleIconName: AppIcon
+        CFBundleURLTypes:
+          - CFBundleURLName: ai.enclawed.ios
+            CFBundleURLSchemes:
+              - enclawed
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        EnclawedCanonicalVersion: "$(ENCLAWED_IOS_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes:
+          - audio
+          - remote-notification
+        BGTaskSchedulerPermittedIdentifiers:
+          - ai.enclawed.ios.bgrefresh
+        NSLocalNetworkUsageDescription: Enclawed discovers and connects to your Enclawed gateway on the local network.
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoadsInWebContent: true
+        NSBonjourServices:
+          - _enclawed-gw._tcp
+        NSCameraUsageDescription: Enclawed can capture photos or short video clips when requested via the gateway.
+        NSLocationWhenInUseUsageDescription: Enclawed uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: Enclawed can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: Enclawed needs microphone access for voice wake.
+        NSMotionUsageDescription: Enclawed may use motion data to support device-aware interactions and automations.
+        NSPhotoLibraryUsageDescription: Enclawed needs photo library access when you choose existing photos to share with your assistant.
+        NSSpeechRecognitionUsageDescription: Enclawed uses on-device speech recognition for voice wake.
+        NSSupportsLiveActivities: true
+        ITSAppUsesNonExemptEncryption: false
+        EnclawedPushTransport: "$(ENCLAWED_PUSH_TRANSPORT)"
+        EnclawedPushDistribution: "$(ENCLAWED_PUSH_DISTRIBUTION)"
+        EnclawedPushRelayBaseURL: "$(ENCLAWED_PUSH_RELAY_BASE_URL)"
+        EnclawedPushAPNsEnvironment: "$(ENCLAWED_PUSH_APNS_ENVIRONMENT)"
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+
+  EnclawedShareExtension:
+    type: app-extension
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ShareExtension
+    dependencies:
+      - package: EnclawedKit
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(ENCLAWED_SHARE_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(ENCLAWED_SHARE_PROFILE)"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+    info:
+      path: ShareExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Enclawed Share
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).ShareViewController"
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsText: true
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+              NSExtensionActivationSupportsImageWithMaxCount: 10
+              NSExtensionActivationSupportsMovieWithMaxCount: 1
+
+  EnclawedActivityWidget:
+    type: app-extension
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ActivityWidget
+      - path: Sources/LiveActivity/EnclawedActivityAttributes.swift
+    dependencies:
+      - sdk: WidgetKit.framework
+      - sdk: ActivityKit.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(ENCLAWED_ACTIVITY_WIDGET_BUNDLE_ID)"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        SUPPORTS_LIVE_ACTIVITIES: YES
+    info:
+      path: ActivityWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Enclawed Activity
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+        NSSupportsLiveActivities: true
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  EnclawedWatchApp:
+    type: application.watchapp2
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: WatchApp
+    dependencies:
+      - target: EnclawedWatchExtension
+    configFiles:
+      Debug: Config/Signing.xcconfig
+      Release: Config/Signing.xcconfig
+    attributes:
+      DevelopmentTeam: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+      ProvisioningStyle: "$(ENCLAWED_CODE_SIGN_STYLE)"
+    settings:
+      base:
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        ENABLE_APPINTENTS_METADATA: NO
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        PRODUCT_BUNDLE_IDENTIFIER: "$(ENCLAWED_WATCH_APP_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(ENCLAWED_WATCH_APP_PROFILE)"
+    info:
+      path: WatchApp/Info.plist
+      properties:
+        CFBundleDisplayName: Enclawed
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+        WKCompanionAppBundleIdentifier: "$(ENCLAWED_APP_BUNDLE_ID)"
+        WKWatchKitApp: true
+
+  EnclawedWatchExtension:
+    type: watchkit2-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: WatchExtension/Sources
+    dependencies:
+      - sdk: AppIntents.framework
+      - sdk: WatchConnectivity.framework
+      - sdk: UserNotifications.framework
+    configFiles:
+      Debug: Config/Signing.xcconfig
+      Release: Config/Signing.xcconfig
+    attributes:
+      DevelopmentTeam: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+      ProvisioningStyle: "$(ENCLAWED_CODE_SIGN_STYLE)"
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: "$(ENCLAWED_WATCH_EXTENSION_BUNDLE_ID)"
+        PROVISIONING_PROFILE_SPECIFIER: "$(ENCLAWED_WATCH_EXTENSION_PROFILE)"
+    info:
+      path: WatchExtension/Info.plist
+      properties:
+        CFBundleDisplayName: Enclawed
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+        NSExtension:
+          NSExtensionAttributes:
+            WKAppBundleIdentifier: "$(ENCLAWED_WATCH_APP_BUNDLE_ID)"
+          NSExtensionPointIdentifier: com.apple.watchkit
+
+  EnclawedTests:
+    type: bundle.unit-test
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Tests
+        excludes:
+          - Logic
+    dependencies:
+      - target: Enclawed
+      - package: Swabble
+        product: SwabbleKit
+      - sdk: AppIntents.framework
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.enclawed.ios.tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Enclawed.app/Enclawed"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+    info:
+      path: Tests/Info.plist
+      properties:
+        CFBundleDisplayName: EnclawedTests
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"
+
+  EnclawedLogicTests:
+    type: bundle.unit-test
+    platform: iOS
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: Tests/Logic
+    dependencies:
+      - package: EnclawedKit
+    settings:
+      base:
+        CODE_SIGN_IDENTITY: "Apple Development"
+        CODE_SIGN_STYLE: "$(ENCLAWED_CODE_SIGN_STYLE)"
+        DEVELOPMENT_TEAM: "$(ENCLAWED_DEVELOPMENT_TEAM)"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.enclawed.ios.logic-tests
+        ENABLE_APP_INTENTS_METADATA_GENERATION: NO
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+    info:
+      path: Tests/Info.plist
+      properties:
+        CFBundleDisplayName: EnclawedLogicTests
+        CFBundleShortVersionString: "$(ENCLAWED_MARKETING_VERSION)"
+        CFBundleVersion: "$(ENCLAWED_BUILD_VERSION)"

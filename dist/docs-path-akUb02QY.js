@@ -1,0 +1,21 @@
+import { t as resolveEnclawedPackageRoot } from "./enclawed-root-CTcOq9RL.js";
+import fs from "node:fs";
+import path from "node:path";
+//#region src/agents/docs-path.ts
+async function resolveEnclawedDocsPath(params) {
+	const workspaceDir = params.workspaceDir?.trim();
+	if (workspaceDir) {
+		const workspaceDocs = path.join(workspaceDir, "docs");
+		if (fs.existsSync(workspaceDocs)) return workspaceDocs;
+	}
+	const packageRoot = await resolveEnclawedPackageRoot({
+		cwd: params.cwd,
+		argv1: params.argv1,
+		moduleUrl: params.moduleUrl
+	});
+	if (!packageRoot) return null;
+	const packageDocs = path.join(packageRoot, "docs");
+	return fs.existsSync(packageDocs) ? packageDocs : null;
+}
+//#endregion
+export { resolveEnclawedDocsPath as t };

@@ -1,0 +1,28 @@
+{
+  "name": "@enclawed/anthropic-vertex-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Anthropic Vertex provider plugin",
+  "type": "module",
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "0.71.1",
+    "@mariozechner/pi-ai": "0.71.1"
+  },
+  "devDependencies": {
+    "@anthropic-ai/vertex-sdk": "^0.16.0",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "peerDependencies": {
+    "@anthropic-ai/vertex-sdk": "^0.16.0"
+  },
+  "peerDependenciesMeta": {
+    "@anthropic-ai/vertex-sdk": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

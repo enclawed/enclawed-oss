@@ -1,0 +1,58 @@
+import { complete, type Api, type Model } from "@mariozechner/pi-ai";
+import type { EnclawedConfig } from "../config/types.enclawed.js";
+import { type ResolvedProviderAuth } from "./model-auth.js";
+type AllowedMissingApiKeyMode = ResolvedProviderAuth["mode"];
+export type SimpleCompletionModelOptions = {
+    maxTokens?: number;
+    signal?: AbortSignal;
+};
+export type PreparedSimpleCompletionModel = {
+    model: Model<Api>;
+    auth: ResolvedProviderAuth;
+} | {
+    error: string;
+    auth?: ResolvedProviderAuth;
+};
+export type AgentSimpleCompletionSelection = {
+    provider: string;
+    modelId: string;
+    profileId?: string;
+    agentDir: string;
+};
+export type PreparedSimpleCompletionModelForAgent = {
+    selection: AgentSimpleCompletionSelection;
+    model: Model<Api>;
+    auth: ResolvedProviderAuth;
+} | {
+    error: string;
+    selection?: AgentSimpleCompletionSelection;
+    auth?: ResolvedProviderAuth;
+};
+export declare function resolveSimpleCompletionSelectionForAgent(params: {
+    cfg: EnclawedConfig;
+    agentId: string;
+    modelRef?: string;
+}): AgentSimpleCompletionSelection | null;
+export declare function prepareSimpleCompletionModel(params: {
+    cfg: EnclawedConfig | undefined;
+    provider: string;
+    modelId: string;
+    agentDir?: string;
+    profileId?: string;
+    preferredProfile?: string;
+    allowMissingApiKeyModes?: ReadonlyArray<AllowedMissingApiKeyMode>;
+}): Promise<PreparedSimpleCompletionModel>;
+export declare function prepareSimpleCompletionModelForAgent(params: {
+    cfg: EnclawedConfig;
+    agentId: string;
+    modelRef?: string;
+    preferredProfile?: string;
+    allowMissingApiKeyModes?: ReadonlyArray<AllowedMissingApiKeyMode>;
+}): Promise<PreparedSimpleCompletionModelForAgent>;
+export declare function completeWithPreparedSimpleCompletionModel(params: {
+    model: Model<Api>;
+    auth: ResolvedProviderAuth;
+    context: Parameters<typeof complete>[1];
+    options?: SimpleCompletionModelOptions;
+}): Promise<import("@mariozechner/pi-ai").AssistantMessage>;
+export {};

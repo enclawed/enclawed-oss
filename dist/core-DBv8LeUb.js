@@ -1,0 +1,262 @@
+import { i as normalizeLowercaseStringOrEmpty, o as normalizeOptionalLowercaseString } from "./string-coerce-BUSzWgUA.js";
+import "./subsystem-DTyALtnK.js";
+import "./paths-CDjhyzOH.js";
+import "./types.secrets-BpVPfGSB.js";
+import "./net-SK24IRt9.js";
+import { a as emptyChannelConfigSchema } from "./config-schema-Er7gsmfD.js";
+import { c as parseThreadSessionSuffix } from "./session-key-utils-Ce7cepnN.js";
+import { d as resolveThreadSessionKeys } from "./session-key-BOC5unB4.js";
+import { l as buildChatChannelMetaById } from "./registry-DWJO7iQk.js";
+import "./delegate-CrogOShp.js";
+import "./common-DthjNV6P.js";
+import "./typebox-DiOC0WMo.js";
+import "./resolve-route-C6pTQjkz.js";
+import { t as buildAccountScopedDmSecurityPolicy } from "./helpers-Db-VEnkz.js";
+import { r as createTopLevelChannelReplyToModeResolver, t as createScopedAccountReplyToModeResolver } from "./threading-helpers-n0O1TQZv.js";
+import { n as buildOutboundBaseSessionKey, t as normalizeOutboundThreadId } from "./thread-id-CbOhU2V2.js";
+import "./setup-helpers-DOTBbn4V.js";
+import "./secret-file-wVgcWsHA.js";
+import "./tailscale-status-unRm9gR5.js";
+import "./persistent-bindings.resolve-DEQpAqvu.js";
+import "./persistent-bindings.lifecycle-BcfYY68r.js";
+//#region src/plugin-sdk/core.ts
+function createInlineTextPairingAdapter(params) {
+	return {
+		idLabel: params.idLabel,
+		normalizeAllowEntry: params.normalizeAllowEntry,
+		notifyApproval: async (ctx) => {
+			await params.notify({
+				...ctx,
+				message: params.message
+			});
+		}
+	};
+}
+var cachedSdkChatChannelMeta;
+function resolveSdkChatChannelMeta(id) {
+	cachedSdkChatChannelMeta ??= buildChatChannelMetaById();
+	return cachedSdkChatChannelMeta[id];
+}
+function getChatChannelMeta(id) {
+	return resolveSdkChatChannelMeta(id);
+}
+/** Remove one of the known provider prefixes from a free-form target string. */
+function stripChannelTargetPrefix(raw, ...providers) {
+	const trimmed = raw.trim();
+	for (const provider of providers) {
+		const prefix = `${normalizeLowercaseStringOrEmpty(provider)}:`;
+		if (normalizeLowercaseStringOrEmpty(trimmed).startsWith(prefix)) return trimmed.slice(prefix.length).trim();
+	}
+	return trimmed;
+}
+/** Remove generic target-kind prefixes such as `user:` or `group:`. */
+function stripTargetKindPrefix(raw) {
+	return raw.replace(/^(user|channel|group|conversation|room|dm):/i, "").trim();
+}
+/**
+* Build the canonical outbound session route payload returned by channel
+* message adapters.
+*/
+function buildChannelOutboundSessionRoute(params) {
+	const baseSessionKey = buildOutboundBaseSessionKey({
+		cfg: params.cfg,
+		agentId: params.agentId,
+		channel: params.channel,
+		accountId: params.accountId,
+		peer: params.peer
+	});
+	return {
+		sessionKey: baseSessionKey,
+		baseSessionKey,
+		peer: params.peer,
+		chatType: params.chatType,
+		from: params.from,
+		to: params.to,
+		...params.threadId !== void 0 ? { threadId: params.threadId } : {}
+	};
+}
+/**
+* Canonical entry helper for channel plugins.
+*
+* This wraps `definePluginEntry(...)`, registers the channel capability, and
+* optionally exposes extra full-runtime registration such as tools or gateway
+* handlers that only make sense outside setup-only registration modes.
+*/
+function defineChannelPluginEntry({ id, name, description, plugin, configSchema, setRuntime, registerCliMetadata, registerFull }) {
+	return {
+		id,
+		name,
+		description,
+		configSchema: typeof configSchema === "function" ? configSchema() : configSchema ?? emptyChannelConfigSchema(),
+		register(api) {
+			if (api.registrationMode === "cli-metadata") {
+				registerCliMetadata?.(api);
+				return;
+			}
+			setRuntime?.(api.runtime);
+			api.registerChannel({ plugin });
+			if (api.registrationMode !== "full") return;
+			registerCliMetadata?.(api);
+			registerFull?.(api);
+		},
+		channelPlugin: plugin,
+		...setRuntime ? { setChannelRuntime: setRuntime } : {}
+	};
+}
+/**
+* Minimal setup-entry helper for channels that ship a separate `setup-entry.ts`.
+*
+* The setup entry only needs to export `{ plugin }`, but using this helper
+* keeps the shape explicit in examples and generated typings.
+*/
+function defineSetupPluginEntry(plugin) {
+	return { plugin };
+}
+function createInlineAttachedChannelResultAdapter(params) {
+	return {
+		sendText: params.sendText ? async (ctx) => ({
+			channel: params.channel,
+			...await params.sendText(ctx)
+		}) : void 0,
+		sendMedia: params.sendMedia ? async (ctx) => ({
+			channel: params.channel,
+			...await params.sendMedia(ctx)
+		}) : void 0,
+		sendPoll: params.sendPoll ? async (ctx) => ({
+			channel: params.channel,
+			...await params.sendPoll(ctx)
+		}) : void 0
+	};
+}
+function resolveChatChannelSecurity(security) {
+	if (!security) return;
+	if (!("dm" in security)) return security;
+	return {
+		resolveDmPolicy: ({ cfg, accountId, account }) => buildAccountScopedDmSecurityPolicy({
+			cfg,
+			channelKey: security.dm.channelKey,
+			accountId,
+			fallbackAccountId: security.dm.resolveFallbackAccountId?.(account) ?? account.accountId,
+			policy: security.dm.resolvePolicy(account),
+			allowFrom: security.dm.resolveAllowFrom(account) ?? [],
+			defaultPolicy: security.dm.defaultPolicy,
+			allowFromPathSuffix: security.dm.allowFromPathSuffix,
+			policyPathSuffix: security.dm.policyPathSuffix,
+			approveChannelId: security.dm.approveChannelId,
+			approveHint: security.dm.approveHint,
+			normalizeEntry: security.dm.normalizeEntry
+		}),
+		...security.collectWarnings ? { collectWarnings: security.collectWarnings } : {},
+		...security.collectAuditFindings ? { collectAuditFindings: security.collectAuditFindings } : {}
+	};
+}
+function resolveChatChannelPairing(pairing) {
+	if (!pairing) return;
+	if (!("text" in pairing)) return pairing;
+	return createInlineTextPairingAdapter(pairing.text);
+}
+function resolveChatChannelThreading(threading) {
+	if (!threading) return;
+	if (!("topLevelReplyToMode" in threading) && !("scopedAccountReplyToMode" in threading)) return threading;
+	let resolveReplyToMode;
+	if ("topLevelReplyToMode" in threading) resolveReplyToMode = createTopLevelChannelReplyToModeResolver(threading.topLevelReplyToMode);
+	else resolveReplyToMode = createScopedAccountReplyToModeResolver(threading.scopedAccountReplyToMode);
+	return {
+		...threading,
+		resolveReplyToMode
+	};
+}
+function resolveChatChannelOutbound(outbound) {
+	if (!outbound) return;
+	if (!("attachedResults" in outbound)) return outbound;
+	return {
+		...outbound.base,
+		...createInlineAttachedChannelResultAdapter(outbound.attachedResults)
+	};
+}
+function createChatChannelPlugin(params) {
+	return {
+		...params.base,
+		conversationBindings: {
+			supportsCurrentConversationBinding: true,
+			...params.base.conversationBindings
+		},
+		...params.security ? { security: resolveChatChannelSecurity(params.security) } : {},
+		...params.pairing ? { pairing: resolveChatChannelPairing(params.pairing) } : {},
+		...params.threading ? { threading: resolveChatChannelThreading(params.threading) } : {},
+		...params.outbound ? { outbound: resolveChatChannelOutbound(params.outbound) } : {}
+	};
+}
+function createChannelPluginBase(params) {
+	return {
+		id: params.id,
+		meta: {
+			...resolveSdkChatChannelMeta(params.id),
+			...params.meta
+		},
+		...params.setupWizard ? { setupWizard: params.setupWizard } : {},
+		...params.capabilities ? { capabilities: params.capabilities } : {},
+		...params.commands ? { commands: params.commands } : {},
+		...params.doctor ? { doctor: params.doctor } : {},
+		...params.agentPrompt ? { agentPrompt: params.agentPrompt } : {},
+		...params.streaming ? { streaming: params.streaming } : {},
+		...params.reload ? { reload: params.reload } : {},
+		...params.gatewayMethods ? { gatewayMethods: params.gatewayMethods } : {},
+		...params.configSchema ? { configSchema: params.configSchema } : {},
+		...params.config ? { config: params.config } : {},
+		...params.security ? { security: params.security } : {},
+		...params.groups ? { groups: params.groups } : {},
+		setup: params.setup
+	};
+}
+function recoverCurrentThreadSessionId(params) {
+	const current = parseThreadSessionSuffix(params.currentSessionKey);
+	if (!current.baseSessionKey || !current.threadId) return;
+	if (normalizeOptionalLowercaseString(current.baseSessionKey) !== normalizeOptionalLowercaseString(params.route.baseSessionKey)) return;
+	const context = {
+		route: params.route,
+		currentBaseSessionKey: current.baseSessionKey,
+		currentThreadId: current.threadId
+	};
+	if (params.canRecover && !params.canRecover(context)) return;
+	return current.threadId;
+}
+function resolveThreadAwareOutboundCandidate(threadId) {
+	const sessionThreadId = normalizeOutboundThreadId(threadId);
+	if (sessionThreadId === void 0) return;
+	return {
+		routeThreadId: typeof threadId === "number" ? threadId : sessionThreadId,
+		sessionThreadId
+	};
+}
+function buildThreadAwareOutboundSessionRoute(params) {
+	const recoveredThreadId = recoverCurrentThreadSessionId({
+		route: params.route,
+		currentSessionKey: params.currentSessionKey,
+		canRecover: params.canRecoverCurrentThread
+	});
+	const candidates = {
+		replyToId: resolveThreadAwareOutboundCandidate(params.replyToId),
+		threadId: resolveThreadAwareOutboundCandidate(params.threadId),
+		currentSession: resolveThreadAwareOutboundCandidate(recoveredThreadId)
+	};
+	const candidate = (params.precedence ?? [
+		"replyToId",
+		"threadId",
+		"currentSession"
+	]).map((source) => candidates[source]).find(Boolean);
+	const threadKeys = resolveThreadSessionKeys({
+		baseSessionKey: params.route.baseSessionKey,
+		threadId: candidate?.sessionThreadId,
+		parentSessionKey: candidate ? params.parentSessionKey : void 0,
+		useSuffix: params.useSuffix,
+		normalizeThreadId: params.normalizeThreadId
+	});
+	return {
+		...params.route,
+		sessionKey: threadKeys.sessionKey,
+		...candidate !== void 0 ? { threadId: candidate.routeThreadId } : {}
+	};
+}
+//#endregion
+export { defineChannelPluginEntry as a, recoverCurrentThreadSessionId as c, createChatChannelPlugin as i, stripChannelTargetPrefix as l, buildThreadAwareOutboundSessionRoute as n, defineSetupPluginEntry as o, createChannelPluginBase as r, getChatChannelMeta as s, buildChannelOutboundSessionRoute as t, stripTargetKindPrefix as u };

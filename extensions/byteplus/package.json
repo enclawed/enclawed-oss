@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/byteplus-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed BytePlus provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

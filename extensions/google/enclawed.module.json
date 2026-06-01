@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "google",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "ltrwBomfkjlDZGh1BNviaVMvg7HH/DuK83UgLL5eKRbdauIQtjvmhc7S9IIJYQnhy8CcbyY3L1bBCc9Fo5FRAw=="
+}
