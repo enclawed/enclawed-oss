@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/tencent-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Tencent Cloud provider plugin (TokenHub + Token Plan)",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

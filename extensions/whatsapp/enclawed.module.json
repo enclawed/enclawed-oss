@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "whatsapp",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "NRtIccnqVNFst4rqByzhAy5CYip3NgyTgTtOYRTJsHexNG1w1I6vyDqEAKn5rIEkwjz2YhnOsEcOJutLLBo8AQ=="
+}

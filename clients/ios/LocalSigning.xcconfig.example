@@ -1,0 +1,17 @@
+// Copy to LocalSigning.xcconfig for personal local signing overrides.
+// This file is only an example and should stay committed.
+
+ENCLAWED_CODE_SIGN_STYLE = Automatic
+ENCLAWED_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+
+ENCLAWED_APP_BUNDLE_ID = ai.enclawed.client
+ENCLAWED_SHARE_BUNDLE_ID = ai.enclawed.client.share
+ENCLAWED_ACTIVITY_WIDGET_BUNDLE_ID = ai.enclawed.client.activitywidget
+ENCLAWED_WATCH_APP_BUNDLE_ID = ai.enclawed.client.watchkitapp
+ENCLAWED_WATCH_EXTENSION_BUNDLE_ID = ai.enclawed.client.watchkitapp.extension
+
+// Leave empty with automatic signing.
+ENCLAWED_APP_PROFILE =
+ENCLAWED_SHARE_PROFILE =
+ENCLAWED_WATCH_APP_PROFILE =
+ENCLAWED_WATCH_EXTENSION_PROFILE =

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: enclawed-config
+  labels:
+    app: enclawed
+data:
+  enclawed.json: |
+    {
+      "gateway": {
+        "mode": "local",
+        "bind": "loopback",
+        "port": 18789,
+        "auth": {
+          "mode": "token"
+        },
+        "controlUi": {
+          "enabled": true
+        }
+      },
+      "agents": {
+        "defaults": {
+          "workspace": "~/.enclawed/workspace"
+        },
+        "list": [
+          {
+            "id": "default",
+            "name": "Enclawed Assistant",
+            "workspace": "~/.enclawed/workspace"
+          }
+        ]
+      },
+      "cron": { "enabled": false }
+    }
+  AGENTS.md: |
+    # Enclawed Assistant
+
+    You are a helpful AI assistant running in Kubernetes.

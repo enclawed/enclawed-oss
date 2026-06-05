@@ -1,0 +1,57 @@
+node_modules/
+# Use dist/* (not dist/) so we can re-include specific files. Git does
+# not re-include a path whose parent directory is excluded; the dir
+# itself has to stay un-ignored even though its contents are.
+dist/*
+# The demo install path imports `enclawed/framework` which resolves to
+# dist/framework.js per the exports map. tsdown chunks the framework
+# across many sibling `*-<hash>.js` files (dlp-scanner-D1fAx4SR.js,
+# abort-Bu6yqa4p.js, …) that framework.js imports at runtime, so we
+# have to ship every `.js` under dist/ — shipping only framework.js
+# leaves the runtime importer with broken file:// URLs and the
+# secretary crashes at first wake-up with `ERR_MODULE_NOT_FOUND`.
+# Source maps, .d.ts, and any other dist artefact stay gitignored.
+!dist/*.js
+**/CLAUDE.md
+.claude/
+
+# Local secrets for the gated live MCP tests (never commit real tokens).
+.env.local
+*.env.local
+
+# LaTeX build artefacts (regenerated on every pdflatex / latexmk run;
+# only the .tex source and the published .pdf are versioned).
+*.aux
+*.fls
+*.fdb_latexmk
+*.out
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.blg
+texput.log
+# Per-paper .log files are build noise (latexmk runlog). Keep .log
+# off the index everywhere except where a user explicitly checks it
+# in (none today).
+enclawed/paper/*.log
+enclawed/paper/*.aux
+
+# Arxiv tarballs (rebuilt from source by tar-up scripts; do not
+# version the binary blob).
+enclawed/paper/*.tar.gz
+papers/**/*.tar.gz
+
+# Python cache from the in-vivo aggregator scripts.
+__pycache__/
+*.pyc
+.artifacts/
+
+# Build artefacts from `npm pack` / runtime bundle attempts.
+# `dist-runtime/` is the tsdown runtime bundle output staging dir;
+# `enclawed-*.tgz` / `enclawed-*.tarball` are the local `npm pack` outputs.
+# Both are reproducible from source — do not version them.
+dist-runtime/
+enclawed-*.tgz
+enclawed-*.tarball
