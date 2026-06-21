@@ -13,7 +13,7 @@
     "enclawed": "workspace:*",
     "imapflow": "^1.0.196",
     "mailparser": "^3.7.5",
-    "nodemailer": "^8.0.9"
+    "nodemailer": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^22",
