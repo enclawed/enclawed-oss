@@ -1,0 +1,62 @@
+{
+  "name": "@enclawed/bluebubbles",
+  "version": "2026.4.25",
+  "description": "Enclawed BlueBubbles channel plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "bluebubbles",
+      "label": "BlueBubbles",
+      "selectionLabel": "BlueBubbles (macOS app)",
+      "detailLabel": "BlueBubbles",
+      "docsPath": "/channels/bluebubbles",
+      "docsLabel": "bluebubbles",
+      "blurb": "iMessage via the BlueBubbles mac app + REST API.",
+      "aliases": [
+        "bb"
+      ],
+      "preferOver": [
+        "imessage"
+      ],
+      "systemImage": "bubble.left.and.text.bubble.right",
+      "order": 75,
+      "cliAddOptions": [
+        {
+          "flags": "--webhook-path <path>",
+          "description": "BlueBubbles webhook path"
+        }
+      ]
+    },
+    "install": {
+      "npmSpec": "@enclawed/bluebubbles",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    },
+    "build": {
+      "enclawedVersion": "2026.4.25"
+    },
+    "release": {
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}

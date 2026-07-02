@@ -1,0 +1,62 @@
+{
+  "name": "@enclawed/qqbot",
+  "version": "2026.4.27",
+  "private": false,
+  "description": "Enclawed QQ Bot channel plugin",
+  "type": "module",
+  "dependencies": {
+    "@tencent-connect/qqbot-connector": "^1.1.0",
+    "mpg123-decoder": "^1.0.3",
+    "silk-wasm": "^3.7.1",
+    "ws": "^8.20.0",
+    "zod": "^4.4.1"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "@types/ws": "^8.18.1",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.27"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "qqbot",
+      "label": "QQ Bot",
+      "selectionLabel": "QQ Bot (Official API)",
+      "detailLabel": "QQ Bot",
+      "docsPath": "/channels/qqbot",
+      "docsLabel": "qqbot",
+      "blurb": "connect to QQ via official QQ Bot API with group chat and direct message support.",
+      "systemImage": "bubble.left.and.bubble.right"
+    },
+    "install": {
+      "npmSpec": "@enclawed/qqbot",
+      "localPath": "extensions/qqbot",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    },
+    "build": {
+      "enclawedVersion": "2026.4.27"
+    },
+    "bundle": {
+      "includeInCore": false
+    },
+    "release": {
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}

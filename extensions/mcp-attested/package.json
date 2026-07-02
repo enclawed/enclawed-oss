@@ -1,0 +1,12 @@
+{
+  "name": "@enclawed/mcp-attested",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference enclawed module: Model Context Protocol client that only connects to MCP servers presenting a signed clearance attestation from a trust-root signer (works for any sector — finance, healthcare, regulated R&D, defense, government).",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

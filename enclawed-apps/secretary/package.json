@@ -1,0 +1,26 @@
+{
+  "name": "enclawed-secretary-app",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reference application: an AI secretary built on the enclawed framework. Reads inbound Gmail, replies to senders in Google Contacts, refuses everyone else, runs a daily tidy + executive-summary loop.",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/main.ts"
+  },
+  "dependencies": {
+    "@napi-rs/keyring": "^1.1.7",
+    "chrono-node": "^2.7.7",
+    "enclawed": "workspace:*",
+    "imapflow": "^1.0.196",
+    "mailparser": "^3.7.5",
+    "nodemailer": "^8.0.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/nodemailer": "^8.0.0",
+    "tsx": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
