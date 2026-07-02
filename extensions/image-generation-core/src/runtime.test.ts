@@ -1,0 +1,24 @@
+import { describe, expect, it, vi } from "vitest";
+
+const sdkExports = vi.hoisted(() => ({
+  generateImage: vi.fn(),
+  listRuntimeImageGenerationProviders: vi.fn(),
+}));
+
+vi.mock("@enclawed/plugin-sdk/image-generation-runtime", () => sdkExports);
+
+import {
+  generateImage as sdkGenerateImage,
+  listRuntimeImageGenerationProviders as sdkListRuntimeImageGenerationProviders,
+} from "@enclawed/plugin-sdk/image-generation-runtime";
+import { generateImage, listRuntimeImageGenerationProviders } from "./runtime.js";
+
+describe("image-generation-core runtime", () => {
+  it("re-exports generateImage from the plugin sdk runtime", () => {
+    expect(generateImage).toBe(sdkGenerateImage);
+  });
+
+  it("re-exports listRuntimeImageGenerationProviders from the plugin sdk runtime", () => {
+    expect(listRuntimeImageGenerationProviders).toBe(sdkListRuntimeImageGenerationProviders);
+  });
+});

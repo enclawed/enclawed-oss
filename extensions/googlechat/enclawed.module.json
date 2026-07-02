@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "googlechat",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "wLlOB52ZJxfYuWcmAZiG/VFC5I91UKh/4d7Mc1sFe8Ye9BTUAHbEA/DAB0r2FaSGpE0SsZG1fDuOB0dQHNScAA=="
+}

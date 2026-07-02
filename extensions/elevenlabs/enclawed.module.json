@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "elevenlabs",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "9tT/hM65952DEpAVCTRqNepr1Ob4C/i14wp0VACYvPAFukPCL2/uAT5MKTHsqse1Q6ShtE8NG8JdCbWPrAgzBQ=="
+}
