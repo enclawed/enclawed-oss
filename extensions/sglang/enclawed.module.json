@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "sglang",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "OhInSrp/Ps8CHXirTB2cued53SSXemqmn6hgyqeqqWJ8Cs5OmBU78seM8VNYhxVFiQ/+TZwg7tEZfS4zemdvDQ=="
+}

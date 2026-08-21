@@ -1,0 +1,79 @@
+import type { FinalizedMsgContext } from "../auto-reply/templating.js";
+import type { EnclawedConfig } from "../config/types.enclawed.js";
+import type { PluginHookInboundClaimContext, PluginHookInboundClaimEvent, PluginHookMessageContext, PluginHookMessageReceivedEvent, PluginHookMessageSentEvent } from "../plugins/hook-message.types.js";
+import type { MessagePreprocessedHookContext, MessageReceivedHookContext, MessageSentHookContext, MessageTranscribedHookContext } from "./internal-hooks.js";
+export type CanonicalInboundMessageHookContext = {
+    from: string;
+    to?: string;
+    content: string;
+    body?: string;
+    bodyForAgent?: string;
+    transcript?: string;
+    timestamp?: number;
+    channelId: string;
+    accountId?: string;
+    conversationId?: string;
+    messageId?: string;
+    senderId?: string;
+    senderName?: string;
+    senderUsername?: string;
+    senderE164?: string;
+    provider?: string;
+    surface?: string;
+    threadId?: string | number;
+    mediaPath?: string;
+    mediaType?: string;
+    mediaPaths?: string[];
+    mediaTypes?: string[];
+    originatingChannel?: string;
+    originatingTo?: string;
+    guildId?: string;
+    channelName?: string;
+    isGroup: boolean;
+    groupId?: string;
+    topicName?: string;
+};
+export type CanonicalSentMessageHookContext = {
+    to: string;
+    content: string;
+    success: boolean;
+    error?: string;
+    channelId: string;
+    accountId?: string;
+    conversationId?: string;
+    messageId?: string;
+    isGroup?: boolean;
+    groupId?: string;
+};
+export declare function deriveInboundMessageHookContext(ctx: FinalizedMsgContext, overrides?: {
+    content?: string;
+    messageId?: string;
+}): CanonicalInboundMessageHookContext;
+export declare function buildCanonicalSentMessageHookContext(params: {
+    to: string;
+    content: string;
+    success: boolean;
+    error?: string;
+    channelId: string;
+    accountId?: string;
+    conversationId?: string;
+    messageId?: string;
+    isGroup?: boolean;
+    groupId?: string;
+}): CanonicalSentMessageHookContext;
+export declare function toPluginMessageContext(canonical: CanonicalInboundMessageHookContext | CanonicalSentMessageHookContext): PluginHookMessageContext;
+export declare function toPluginInboundClaimContext(canonical: CanonicalInboundMessageHookContext): PluginHookInboundClaimContext;
+export declare function toPluginInboundClaimEvent(canonical: CanonicalInboundMessageHookContext, extras?: {
+    commandAuthorized?: boolean;
+    wasMentioned?: boolean;
+}): PluginHookInboundClaimEvent;
+export declare function toPluginMessageReceivedEvent(canonical: CanonicalInboundMessageHookContext): PluginHookMessageReceivedEvent;
+export declare function toPluginMessageSentEvent(canonical: CanonicalSentMessageHookContext): PluginHookMessageSentEvent;
+export declare function toInternalMessageReceivedContext(canonical: CanonicalInboundMessageHookContext): MessageReceivedHookContext;
+export declare function toInternalMessageTranscribedContext(canonical: CanonicalInboundMessageHookContext, cfg: EnclawedConfig): MessageTranscribedHookContext & {
+    cfg: EnclawedConfig;
+};
+export declare function toInternalMessagePreprocessedContext(canonical: CanonicalInboundMessageHookContext, cfg: EnclawedConfig): MessagePreprocessedHookContext & {
+    cfg: EnclawedConfig;
+};
+export declare function toInternalMessageSentContext(canonical: CanonicalSentMessageHookContext): MessageSentHookContext;

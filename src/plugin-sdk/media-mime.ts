@@ -1,0 +1,10 @@
+// Narrow media MIME helper surface for plugins that do not need the full media runtime.
+
+export {
+  detectMime,
+  extensionForMime,
+  getFileExtension,
+  normalizeMimeType,
+} from "../media/mime.js";
+
+export { mediaKindFromMime } from "../media/constants.js";

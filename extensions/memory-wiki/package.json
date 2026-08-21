@@ -1,0 +1,27 @@
+{
+  "name": "@enclawed/memory-wiki",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed persistent wiki plugin",
+  "type": "module",
+  "dependencies": {
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.16"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
