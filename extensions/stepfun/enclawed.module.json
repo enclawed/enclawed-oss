@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "stepfun",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "AnGrJq+T4v+Kl47M/r8idK3Q8w1kPCrrdhArbSbqfhL+mNCqkch8RioSK2VNoiCl90cgYIlnc8v2n+vI0RiVCQ=="
+}

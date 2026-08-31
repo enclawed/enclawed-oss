@@ -1,0 +1,18 @@
+{
+  "name": "@enclawed/firecrawl-plugin",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Firecrawl plugin",
+  "type": "module",
+  "dependencies": {
+    "typebox": "1.1.37"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

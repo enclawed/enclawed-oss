@@ -1,0 +1,33 @@
+import type { ModelAliasIndex } from "../../agents/model-selection.js";
+import type { SessionEntry } from "../../config/sessions/types.js";
+import type { EnclawedConfig } from "../../config/types.enclawed.js";
+import type { InlineDirectives } from "./directive-handling.parse.js";
+export declare function persistInlineDirectives(params: {
+    directives: InlineDirectives;
+    effectiveModelDirective?: string;
+    cfg: EnclawedConfig;
+    agentDir?: string;
+    sessionEntry?: SessionEntry;
+    sessionStore?: Record<string, SessionEntry>;
+    sessionKey?: string;
+    storePath?: string;
+    elevatedEnabled: boolean;
+    elevatedAllowed: boolean;
+    defaultProvider: string;
+    defaultModel: string;
+    aliasIndex: ModelAliasIndex;
+    allowedModelKeys: Set<string>;
+    provider: string;
+    model: string;
+    initialModelLabel: string;
+    formatModelSwitchEvent: (label: string, alias?: string) => string;
+    agentCfg: NonNullable<EnclawedConfig["agents"]>["defaults"] | undefined;
+    messageProvider?: string;
+    surface?: string;
+    gatewayClientScopes?: string[];
+    senderIsOwner?: boolean;
+}): Promise<{
+    provider: string;
+    model: string;
+    contextTokens: number;
+}>;

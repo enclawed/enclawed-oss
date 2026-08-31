@@ -1,0 +1,143 @@
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { resolveBrewPathDirs } from "./brew.js";
+import { isTruthyEnvValue } from "./env.js";
+
+type EnsureEnclawedPathOpts = {
+  execPath?: string;
+  cwd?: string;
+  homeDir?: string;
+  platform?: NodeJS.Platform;
+  pathEnv?: string;
+  allowProjectLocalBin?: boolean;
+};
+
+function isExecutable(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isDirectory(dirPath: string): boolean {
+  try {
+    return fs.statSync(dirPath).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function mergePath(params: { existing: string; prepend?: string[]; append?: string[] }): string {
+  const partsExisting = params.existing
+    .split(path.delimiter)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const partsPrepend = (params.prepend ?? []).map((part) => part.trim()).filter(Boolean);
+  const partsAppend = (params.append ?? []).map((part) => part.trim()).filter(Boolean);
+
+  const seen = new Set<string>();
+  const merged: string[] = [];
+  for (const part of [...partsPrepend, ...partsExisting, ...partsAppend]) {
+    if (!seen.has(part)) {
+      seen.add(part);
+      merged.push(part);
+    }
+  }
+  return merged.join(path.delimiter);
+}
+
+function candidateBinDirs(opts: EnsureEnclawedPathOpts): { prepend: string[]; append: string[] } {
+  const execPath = opts.execPath ?? process.execPath;
+  const cwd = opts.cwd ?? process.cwd();
+  const homeDir = opts.homeDir ?? os.homedir();
+  const platform = opts.platform ?? process.platform;
+
+  const prepend: string[] = [];
+  const append: string[] = [];
+
+  // Keep the active runtime directory ahead of PATH hardening so shebang-based
+  // subprocesses keep using the same Node/Bun the current Enclawed process is on.
+  try {
+    const execDir = path.dirname(execPath);
+    if (isExecutable(execPath)) {
+      prepend.push(execDir);
+    }
+  } catch {
+    // ignore
+  }
+
+  // Bundled macOS app: `enclawed` lives next to the executable (process.execPath).
+  try {
+    const execDir = path.dirname(execPath);
+    const siblingCli = path.join(execDir, "enclawed");
+    if (isExecutable(siblingCli)) {
+      prepend.push(execDir);
+    }
+  } catch {
+    // ignore
+  }
+
+  // Project-local installs are a common repo-based attack vector (bin hijacking). Keep this
+  // disabled by default; if an operator explicitly enables it, only append (never prepend).
+  const allowProjectLocalBin =
+    opts.allowProjectLocalBin === true ||
+    isTruthyEnvValue(process.env.ENCLAWED_ALLOW_PROJECT_LOCAL_BIN);
+  if (allowProjectLocalBin) {
+    const localBinDir = path.join(cwd, "node_modules", ".bin");
+    if (isExecutable(path.join(localBinDir, "enclawed"))) {
+      append.push(localBinDir);
+    }
+  }
+
+  // Only immutable OS directories go in prepend so they take priority over
+  // user-writable locations, preventing PATH hijack of system binaries.
+  prepend.push("/usr/bin", "/bin");
+
+  // User-writable / package-manager directories are appended so they never
+  // shadow trusted OS binaries.
+  // This includes Brew/Homebrew dirs, which are useful for finding `enclawed`
+  // in launchd/minimal environments but must not be treated as trusted.
+  append.push(...resolveBrewPathDirs({ homeDir }));
+  const miseDataDir = process.env.MISE_DATA_DIR ?? path.join(homeDir, ".local", "share", "mise");
+  const miseShims = path.join(miseDataDir, "shims");
+  if (isDirectory(miseShims)) {
+    append.push(miseShims);
+  }
+  if (platform === "darwin") {
+    append.push(path.join(homeDir, "Library", "pnpm"));
+  }
+  if (process.env.XDG_BIN_HOME) {
+    append.push(process.env.XDG_BIN_HOME);
+  }
+  append.push(path.join(homeDir, ".local", "bin"));
+  append.push(path.join(homeDir, ".local", "share", "pnpm"));
+  append.push(path.join(homeDir, ".bun", "bin"));
+  append.push(path.join(homeDir, ".yarn", "bin"));
+
+  return { prepend: prepend.filter(isDirectory), append: append.filter(isDirectory) };
+}
+
+/**
+ * Best-effort PATH bootstrap so skills that require the `enclawed` CLI can run
+ * under launchd/minimal environments (and inside the macOS app bundle).
+ */
+export function ensureEnclawedCliOnPath(opts: EnsureEnclawedPathOpts = {}) {
+  if (isTruthyEnvValue(process.env.ENCLAWED_PATH_BOOTSTRAPPED)) {
+    return;
+  }
+  process.env.ENCLAWED_PATH_BOOTSTRAPPED = "1";
+
+  const existing = opts.pathEnv ?? process.env.PATH ?? "";
+  const { prepend, append } = candidateBinDirs(opts);
+  if (prepend.length === 0 && append.length === 0) {
+    return;
+  }
+
+  const merged = mergePath({ existing, prepend, append });
+  if (merged) {
+    process.env.PATH = merged;
+  }
+}

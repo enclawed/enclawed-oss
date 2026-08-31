@@ -1,0 +1,24 @@
+{
+  "name": "@enclawed/migrate-claude",
+  "version": "2026.4.26",
+  "private": true,
+  "description": "Claude to Enclawed migration provider",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.26"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
