@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "phone-control",
+  "publisher": "enclawed-bundled",
+  "version": "0.0.0",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "gHbY61fn6ZhaGp7o81AB+GRHUAoVzMoRlFCHBxr04XFCYOcrLnQ6v749k9YG2adT4wDb7sPg1tRjoeoaeCyqBQ=="
+}

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: enclawed
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: ENCLAWED_GATEWAY_PORT
+        value: "8080"
+      - key: ENCLAWED_STATE_DIR
+        value: /data/.enclawed
+      - key: ENCLAWED_WORKSPACE_DIR
+        value: /data/workspace
+      - key: ENCLAWED_GATEWAY_TOKEN
+        generateValue: true
+    disk:
+      name: enclawed-data
+      mountPath: /data
+      sizeGB: 1

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "deepinfra",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "vTgRtY8Bi/4OfqdYh4it0vr1Z+EkhwpiPBuLyG8LNJqzF3raLZkIvw0GAC3yaTpOwHWd7wBxJhIPSQzJ0jzxDA=="
+}

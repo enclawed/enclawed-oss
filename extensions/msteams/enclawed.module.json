@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "msteams",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "wnsWkPdqGUzbT0RW+dOn7vPzZIS3aRF0C7zhaOenne71Dkl686hvwI6cx3TVzQZwzcBCNUB4YAv9Nm1k5GKzDA=="
+}

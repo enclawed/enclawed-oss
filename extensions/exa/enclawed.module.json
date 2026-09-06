@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "exa",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "mMgDqpMJE2ByIHsV9kOOCERvAK6E6RfbHrFHfu4mg1b21vTFC0dGrbmT9sR27HyNfTsMlaoCvfJvyw78D5mzBA=="
+}
