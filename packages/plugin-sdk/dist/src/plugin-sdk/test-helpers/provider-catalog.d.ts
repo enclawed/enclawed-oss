@@ -1,0 +1,5 @@
+export { expectAugmentedCodexCatalog, expectedAugmentedOpenaiCodexCatalogEntriesWithGpt55, expectedOpenaiPluginCodexCatalogEntriesWithGpt55, expectCodexMissingAuthHint, } from "../../plugins/provider-runtime.test-support.js";
+export type { ProviderPlugin } from "../provider-model-shared.js";
+export { loadBundledPluginPublicSurface, loadBundledPluginPublicSurfaceSync, } from "./public-surface-loader.js";
+type ProviderRuntimeCatalogModule = Pick<typeof import("@enclawed/plugin-sdk/provider-catalog-runtime"), "augmentModelCatalogWithProviderPlugins">;
+export declare function importProviderRuntimeCatalogModule(): Promise<ProviderRuntimeCatalogModule>;

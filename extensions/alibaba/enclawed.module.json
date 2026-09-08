@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "alibaba",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "D8MvPjmWAl0YxAMUWitFWNNZwLFTxAvreMi/ZJTsQoPqSRMIwizm/vjsu/900brfGlSN1Pag2uWZ511YN7I2BA=="
+}

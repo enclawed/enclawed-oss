@@ -1,0 +1,107 @@
+import { describe, expect, it } from "vitest";
+import { EnclawedSchema } from "./zod-schema.js";
+
+describe("skills entries config schema", () => {
+  it("accepts custom fields under config", () => {
+    const res = EnclawedSchema.safeParse({
+      skills: {
+        entries: {
+          "custom-skill": {
+            enabled: true,
+            config: {
+              url: "https://example.invalid",
+              token: "abc123",
+            },
+          },
+        },
+      },
+    });
+
+    expect(res.success).toBe(true);
+  });
+
+  it("rejects unknown top-level fields", () => {
+    const res = EnclawedSchema.safeParse({
+      skills: {
+        entries: {
+          "custom-skill": {
+            url: "https://example.invalid",
+          },
+        },
+      },
+    });
+
+    expect(res.success).toBe(false);
+    if (res.success) {
+      return;
+    }
+
+    expect(
+      res.error.issues.some(
+        (issue) =>
+          issue.path.join(".") === "skills.entries.custom-skill" &&
+          issue.message.toLowerCase().includes("unrecognized"),
+      ),
+    ).toBe(true);
+  });
+
+  it("accepts agents.defaults.skills", () => {
+    const res = EnclawedSchema.safeParse({
+      agents: {
+        defaults: {
+          skills: ["github", "weather"],
+        },
+      },
+    });
+
+    expect(res.success).toBe(true);
+  });
+
+  it("accepts agents.list[].skills as explicit replacements", () => {
+    const res = EnclawedSchema.safeParse({
+      agents: {
+        defaults: {
+          skills: ["github", "weather"],
+        },
+        list: [{ id: "writer", skills: ["docs-search"] }],
+      },
+    });
+
+    expect(res.success).toBe(true);
+  });
+
+  it("accepts explicit empty skills arrays for defaults and agents", () => {
+    const res = EnclawedSchema.safeParse({
+      agents: {
+        defaults: {
+          skills: [],
+        },
+        list: [{ id: "writer", skills: [] }],
+      },
+    });
+
+    expect(res.success).toBe(true);
+  });
+
+  it("rejects legacy skills.policy config", () => {
+    const res = EnclawedSchema.safeParse({
+      skills: {
+        policy: {
+          globalEnabled: ["github"],
+        } as never,
+      },
+    });
+
+    expect(res.success).toBe(false);
+    if (res.success) {
+      return;
+    }
+
+    expect(
+      res.error.issues.some(
+        (issue) =>
+          issue.path.join(".") === "skills" && issue.message.toLowerCase().includes("unrecognized"),
+      ),
+    ).toBe(true);
+  });
+});

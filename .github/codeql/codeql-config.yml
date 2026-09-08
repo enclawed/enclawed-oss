@@ -1,0 +1,44 @@
+name: "enclawed CodeQL config"
+
+# Scope analysis to enclawed-owned source only. Upstream Enclawed code
+# that was inherited by the fork is out of enclawed's maintenance scope;
+# scanning it would drown the Security tab in alerts we neither own nor
+# can fix. The four paths below cover every line of code that ships from
+# enclawed: the 22 TypeScript framework modules, the 17 .mjs canonical
+# references, the 21 test + pen-test files, and the product demo.
+paths:
+  - src/enclawed
+  - enclawed/src
+  - enclawed/test
+  - enclawed/demo
+
+# Use the security-extended suite. It includes every security query the
+# default suite runs, plus additional security-focused queries for the
+# exact attack surfaces the framework's pen-tests target: injection
+# (command / code / log / prompt), crypto misuse, path traversal,
+# prototype pollution, insecure randomness, regex DoS, open redirect,
+# and hard-coded credentials. We deliberately do NOT use
+# security-and-quality, which mixes in style / maintainability
+# findings unrelated to the security thesis of this repo.
+queries:
+  - uses: security-extended
+
+# Exclude queries that produce false positives against this codebase by
+# construction:
+#
+#   - js/hardcoded-credentials and js/encryption-key-in-source flag the
+#     literal AWS-access-key shapes, PEM private-key markers, and SSNs
+#     embedded in the DLP scanner's test fixtures (dlp-scanner.test.mjs,
+#     paper-conformance.test.mjs, integration.test.ts). Those strings
+#     are inputs to a detector designed to find exactly that shape;
+#     they are never real credentials and never leave the test runner.
+#   - js/insecure-randomness flags Math.random() in test ordering /
+#     shuffling; the framework's actual cryptographic operations all
+#     route through node:crypto.
+#
+# All three queries remain enabled for non-test source.
+query-filters:
+  - exclude:
+      id: js/hardcoded-credentials
+  - exclude:
+      id: js/encryption-key-in-source

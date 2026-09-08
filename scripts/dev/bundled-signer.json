@@ -1,0 +1,7 @@
+{
+  "keyId": "enclawed-bundled-dev-2026",
+  "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAfA+FXXYndxLjvnbzBbMSuo3IPWP+r16CL3jbWjTWpQQ=\n-----END PUBLIC KEY-----\n",
+  "approvedClearance": ["public", "internal"],
+  "description": "Bundled dev signer used for the shipped extension set. Replace with an HSM-anchored signer for any non-dev deployment.",
+  "generatedAt": "2026-05-29T03:05:26.879Z"
+}

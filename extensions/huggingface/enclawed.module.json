@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "huggingface",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "I3s5KD4Sk5MtR5suanYWctAFj1S5Jm4lA6lQFoXoLQUDQX8soiYmdj0TR2bsykk+iZJH1kQOtfZK0r2bVXtJAg=="
+}

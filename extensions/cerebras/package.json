@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/cerebras-provider",
+  "version": "2026.4.26",
+  "private": true,
+  "description": "Enclawed Cerebras provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

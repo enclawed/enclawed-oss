@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mcp-google-workspace",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "MPgf1PCTyjdKG66+jqTWVKYm+SnS1DBfVcfhoSOO/9yTzQ3EcQc/lsqgPQBvVFwrxYIHiyDXnHOPW0JqKpzIDA=="
+}

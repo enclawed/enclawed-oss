@@ -1,0 +1,530 @@
+# OpenGrep super-config: precise-enclawed
+#
+# Hand-curated rulepack covering the security primitives added by enclawed
+# itself (NOT inherited from upstream Enclawed). Each rule is derived from a
+# corresponding adversarial pen-test under enclawed/test/security/, so the
+# vulnerable shape it detects has a concrete runtime test that exercises the
+# same bypass attempt.
+#
+# This rulepack is INTENTIONALLY DISTINCT from precise.yml (the inherited
+# upstream Enclawed rulepack) so the provenance metadata stays clean:
+# precise.yml rules point at enclawed/enclawed GHSAs; precise-enclawed.yml
+# rules point at the enclawed pen-test that demonstrates the bypass.
+#
+# Quality contract (same as precise.yml): each rule must catch the vulnerable
+# behavior, stay silent on the legitimate framework implementation of the same
+# primitive (excluded via paths.exclude), and report only verified regressions
+# or variants when run against the current tree.
+#
+# Validate locally with:
+#   opengrep validate security/opengrep/precise-enclawed.yml
+#   node security/opengrep/check-rule-metadata.mjs security/opengrep/precise-enclawed.yml
+#
+# Path scope: rules apply to extensions/ and other non-framework first-party
+# code. The framework's own primitives (enclawed/src/, src/enclawed/,
+# src/enclawed-secure/) are excluded because they legitimately implement these
+# bypass-resistant interfaces. The pen-tests themselves are also excluded
+# because they intentionally exercise the bypass shapes.
+
+rules:
+  # --------------------------------------------------------------------------
+  # Egress-guard bypass (pen-test: extension-egress-bypass.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-egress-bypass.fetch-reassign
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "Reassigning globalThis.fetch / window.fetch from extension code bypasses enclawed's two-layer egress guard. Outbound HTTP must go through the per-extension admission gate; the global fetch is frozen in the enclaved flavor."
+    pattern-either:
+      - pattern: globalThis.fetch = $X
+      - pattern: window.fetch = $X
+      - pattern: global.fetch = $X
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-EGRESS-BYPASS
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/extension-egress-bypass.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: fetch-reassign
+      cwe: CWE-829
+      category: security
+      confidence: high
+      likelihood: high
+      impact: high
+
+  - id: enclawed-pen-egress-bypass.fetch-defineproperty
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "Object.defineProperty on globalThis.fetch from extension code attempts to swap the egress guard. Use the per-extension admission gate; do not redefine the global fetch."
+    pattern-either:
+      - pattern: |
+          Object.defineProperty(globalThis, 'fetch', $OPTS)
+      - pattern: |
+          Object.defineProperty(globalThis, "fetch", $OPTS)
+      - pattern: |
+          Object.defineProperty(window, 'fetch', $OPTS)
+      - pattern: |
+          Object.defineProperty(window, "fetch", $OPTS)
+      - pattern: |
+          Object.defineProperty(global, 'fetch', $OPTS)
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-EGRESS-BYPASS
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/extension-egress-bypass.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: fetch-defineproperty
+      cwe: CWE-829
+      category: security
+      confidence: high
+      likelihood: high
+      impact: high
+
+  - id: enclawed-pen-egress-bypass.socket-connect-reassign
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "Reassigning Socket.prototype.connect from extension code bypasses enclawed's raw-socket egress guard. tls.TLSSocket, http.Agent, https.Agent, and net.createConnection all transitively call this; replacing it disables every layer-2 egress check."
+    pattern-either:
+      - pattern: Socket.prototype.connect = $X
+      - pattern: $NET.Socket.prototype.connect = $X
+      - pattern: |
+          Object.defineProperty(Socket.prototype, 'connect', $OPTS)
+      - pattern: |
+          Object.defineProperty(Socket.prototype, "connect", $OPTS)
+      - pattern: |
+          Object.defineProperty($NET.Socket.prototype, 'connect', $OPTS)
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-EGRESS-BYPASS
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/extension-egress-bypass.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: socket-connect-reassign
+      cwe: CWE-829
+      category: security
+      confidence: high
+      likelihood: high
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Audit-log tampering (pen-test: extension-audit-tamper.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-audit-tamper.recordhash-mutation
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "Mutating recordHash or prevHash on an audit record breaks the hash chain. Audit records are intended to be immutable; emit a new record via AuditLogger.append() instead."
+    pattern-either:
+      - pattern: $REC.recordHash = $X
+      - pattern: $REC.prevHash = $X
+      - pattern: $REC["recordHash"] = $X
+      - pattern: $REC["prevHash"] = $X
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-AUDIT-TAMPER
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/extension-audit-tamper.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: recordhash-mutation
+      cwe: CWE-345
+      category: security
+      confidence: high
+      likelihood: medium
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Net.egress admission (pen-test: extension-net-admission.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-net-admission.netallowedhosts-empty
+    languages:
+      - generic
+    severity: ERROR
+    message: "Manifest declares the net.egress capability but ships an empty netAllowedHosts list. Per the biconditional admission gate, every net-capable extension must enumerate the exact hosts it intends to contact."
+    paths:
+      include:
+        - "*enclawed.module.json"
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    pattern-regex: '"capabilities"\s*:\s*\[[^\]]*"net\.egress"[^\]]*\][^}]*"netAllowedHosts"\s*:\s*\[\s*\]'
+    metadata:
+      advisory-id: ENCLAWED-PEN-NET-ADMISSION
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/extension-net-admission.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: netallowedhosts-empty
+      cwe: CWE-732
+      category: security
+      confidence: high
+      likelihood: high
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Trust-root mutation (pen-test: trust-root-and-scheme.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-trust-root.unsafe-unlock-outside-test
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "_unsafeUnlockTrustRootForTest is a test-only escape hatch and must not appear in production code paths. It explicitly defeats the post-bootstrap trust-root lock."
+    pattern: _unsafeUnlockTrustRootForTest()
+    paths:
+      exclude:
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-TRUST-ROOT
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/trust-root-and-scheme.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: unsafe-unlock-outside-test
+      cwe: CWE-489
+      category: security
+      confidence: high
+      likelihood: medium
+      impact: high
+
+  - id: enclawed-pen-trust-root.set-from-extension
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "Extensions must not call setTrustRoot. The trust root is owned by the host bootstrap and is locked before any extension code runs in the enclaved flavor; an extension calling it is either a misuse or an attempted privilege escalation."
+    pattern-either:
+      - pattern: setTrustRoot($X)
+      - pattern: resetTrustRoot()
+    paths:
+      include:
+        - "extensions/**"
+      exclude:
+        - "extensions/**/*.test.*"
+        - "extensions/**/*.spec.*"
+        - "extensions/**/test/**"
+        - "extensions/**/tests/**"
+    metadata:
+      advisory-id: ENCLAWED-PEN-TRUST-ROOT
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/trust-root-and-scheme.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: set-from-extension
+      cwe: CWE-269
+      category: security
+      confidence: high
+      likelihood: medium
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Bootstrap-seal circumvention (pen-test: bootstrap-seal-circumvention,
+  # enclaved-only — but the rules are safe to ship in both repos because the
+  # vulnerable symbols simply do not exist in oss).
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-bootstrap-seal.unsafe-reset-outside-test
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "_unsafeResetBootstrapSealForTest is a test-only escape hatch and must not appear in production. It clears the sealed-bootstrap latch, defeating the zero-trust accreditor."
+    pattern: _unsafeResetBootstrapSealForTest()
+    paths:
+      exclude:
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-BOOTSTRAP-SEAL
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/bootstrap-seal-circumvention.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: unsafe-reset-outside-test
+      cwe: CWE-489
+      category: security
+      confidence: high
+      likelihood: medium
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Module-manifest parsing (pen-test: signature-forgery.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-signature-forgery.module-manifest-jsonparse-direct
+    languages:
+      - typescript
+      - javascript
+    severity: WARNING
+    message: "JSON.parse on enclawed.module.json content bypasses parseManifest / parseExtensionManifest, which enforces shape, capability vocabulary, and (for net-capable extensions) netAllowedHosts presence. Always go through the parser."
+    pattern-either:
+      - pattern: JSON.parse(...).enclawedModule
+      - pattern: |
+          $RAW = JSON.parse($SRC)
+          ...
+          $RAW.signerKeyId
+      - pattern: |
+          $RAW = JSON.parse($SRC)
+          ...
+          $RAW.capabilities
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+        - "scripts/verify-enclaved-bundle.mjs"
+    metadata:
+      advisory-id: ENCLAWED-PEN-SIGNATURE-FORGERY
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/signature-forgery.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: module-manifest-jsonparse-direct
+      cwe: CWE-345
+      category: security
+      confidence: medium
+      likelihood: medium
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Code-injection / shell-template (pen-test: code-injection.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-code-injection.execsync-template-with-user-input
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "execSync with a template-literal command containing a runtime variable is a shell-injection sink. Pass arguments via the args array form (spawn / spawnSync / execFile) instead of building a shell command string."
+    pattern-either:
+      - pattern: |
+          execSync(`...${$X}...`)
+      - pattern: |
+          execSync(`...${$X}...`, $OPTS)
+      - pattern: |
+          exec(`...${$X}...`, ...)
+      - pattern: |
+          spawnSync('sh', ['-c', `...${$X}...`])
+      - pattern: |
+          spawn('sh', ['-c', `...${$X}...`])
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-CODE-INJECTION
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/code-injection.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: execsync-template-with-user-input
+      cwe: CWE-78
+      category: security
+      confidence: high
+      likelihood: high
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # DLP evasion (pen-test: dlp-evasion.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-dlp-evasion.disable-cap-via-onoversize-throw
+    languages:
+      - typescript
+      - javascript
+    severity: WARNING
+    message: "DLP scanner is being invoked with onOversize set to throw on extension-untrusted input. The scanner's 1 MiB default cap is meant to bound CPU; throwing on oversize lets an attacker cause a denial of scan. Prefer truncate with an audited tail for untrusted streams."
+    pattern: |
+      dlpScanner.scan($X, { onOversize: "throw", ... })
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-DLP-EVASION
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/dlp-evasion.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: disable-cap-via-onoversize-throw
+      cwe: CWE-693
+      category: security
+      confidence: medium
+      likelihood: medium
+      impact: medium
+
+  # --------------------------------------------------------------------------
+  # Audit-log primitive misuse (pen-test: audit-log.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-audit-log.append-without-await
+    languages:
+      - typescript
+      - javascript
+    severity: WARNING
+    message: "AuditLogger.append() returns a Promise that resolves only when the record is on disk. Calling it without await means egress can occur before the audit record commits, opening a fire-and-forget gap. Either await or chain a .catch() that records the audit failure on a separate channel."
+    pattern-either:
+      - pattern: |
+          $LOGGER.append({ ... })
+      - pattern: |
+          $LOGGER.append($PAYLOAD)
+    pattern-not-either:
+      - pattern: |
+          await $LOGGER.append({ ... })
+      - pattern: |
+          await $LOGGER.append($PAYLOAD)
+      - pattern: |
+          return $LOGGER.append({ ... })
+      - pattern: |
+          return $LOGGER.append($PAYLOAD)
+      - pattern: |
+          $LOGGER.append({ ... }).catch($CB)
+      - pattern: |
+          $LOGGER.append($PAYLOAD).catch($CB)
+      - pattern: |
+          $LOGGER.append({ ... }).then($A, $B)
+      - pattern: |
+          Promise.resolve($LOGGER.append({ ... })).catch($CB)
+    paths:
+      include:
+        - "extensions/**"
+      exclude:
+        - "extensions/**/*.test.*"
+        - "extensions/**/*.spec.*"
+        - "extensions/**/test/**"
+        - "extensions/**/tests/**"
+    metadata:
+      advisory-id: ENCLAWED-PEN-AUDIT-LOG
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/audit-log.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: append-without-await
+      cwe: CWE-778
+      category: security
+      confidence: low
+      likelihood: medium
+      impact: medium
+
+  # NOTE: prompt-injection.pentest.mjs covers bidi/zero-width passthrough at
+  # runtime (the prompt shield strips them before the prompt goes to the
+  # model). A static rule on the codepoint range is intractable -- legitimate
+  # source files commonly contain escaped-Unicode literals that look identical
+  # to attacker payloads. Coverage stays runtime-only via the pen-test.
+
+  # --------------------------------------------------------------------------
+  # Module loader / FIPS-mode skipping (pen-test: signature-forgery.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-signature-forgery.checkmodule-result-ignored
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "checkModule(...) returned a decision but the allowed flag is not consulted before importing the module. In enclaved flavor an unsigned/wrong-signer module returns { allowed: false }; ignoring it loads untrusted code."
+    pattern-either:
+      - pattern: |
+          checkModule($M);
+          ...
+          import($PATH)
+      - pattern: |
+          checkModule($M);
+          ...
+          require($PATH)
+      - pattern: |
+          checkModule($M);
+          ...
+          await import($PATH)
+    paths:
+      exclude:
+        - "enclawed/src/**"
+        - "src/enclawed/**"
+        - "src/enclawed-secure/**"
+        - "enclawed/test/**"
+        - "test/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "**/*.pentest.*"
+    metadata:
+      advisory-id: ENCLAWED-PEN-SIGNATURE-FORGERY
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/signature-forgery.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: checkmodule-result-ignored
+      cwe: CWE-345
+      category: security
+      confidence: medium
+      likelihood: low
+      impact: high
+
+  # --------------------------------------------------------------------------
+  # Classification scheme tampering (pen-test: trust-root-and-scheme.pentest.mjs)
+  # --------------------------------------------------------------------------
+  - id: enclawed-pen-trust-root.scheme-set-from-extension
+    languages:
+      - typescript
+      - javascript
+    severity: ERROR
+    message: "setActiveScheme is owned by the bootstrap and must not be called from extension code. The classification scheme governs every clearance check in the host; an extension overriding it is either a misuse or a bypass."
+    pattern: setActiveScheme($X)
+    paths:
+      include:
+        - "extensions/**"
+      exclude:
+        - "extensions/**/*.test.*"
+        - "extensions/**/*.spec.*"
+        - "extensions/**/test/**"
+        - "extensions/**/tests/**"
+    metadata:
+      advisory-id: ENCLAWED-PEN-TRUST-ROOT
+      advisory-url: https://github.com/enclawed/enclawed/blob/main/enclawed/test/security/trust-root-and-scheme.pentest.mjs
+      detector-bucket: precise
+      source-rule-id: scheme-set-from-extension
+      cwe: CWE-269
+      category: security
+      confidence: high
+      likelihood: low
+      impact: high
