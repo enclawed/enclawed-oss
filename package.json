@@ -1693,7 +1693,7 @@
     "tsdown": "0.21.7",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.6"
+    "vitest": "^5.0.0"
   },
   "peerDependencies": {
     "@anthropic-ai/vertex-sdk": "^0.15.0",
