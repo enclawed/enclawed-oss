@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "codex",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "X4WF7FUkJb9a0uXNrc2ltnFI3uoDIAvN5fCNWY73sHVDfhko9sMdKv5oUB9EnEm3ovRwCzgONPFQrWlKVE+9AQ=="
+}

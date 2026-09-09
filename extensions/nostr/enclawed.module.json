@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "nostr",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "z1XEgLGM3NRky3SdSdm5+3nHYleVLUICilzal9yHFR4py/pwd+Lq9YuPQUKfzJX0vimEhzTuJykSCgMKyrdpBw=="
+}

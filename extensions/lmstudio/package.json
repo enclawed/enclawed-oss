@@ -1,0 +1,12 @@
+{
+  "name": "@enclawed/lmstudio-provider",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed LM Studio provider plugin",
+  "type": "module",
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

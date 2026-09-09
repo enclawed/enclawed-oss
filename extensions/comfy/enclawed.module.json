@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "comfy",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "XXpiiunBLfUi2axfiPzXkbpSnnPqrTXVL7xHm/nTWGOpxPZB+ehzIm1yrA7+YcZdMJiv3bo52VG9dEFd60JUCg=="
+}

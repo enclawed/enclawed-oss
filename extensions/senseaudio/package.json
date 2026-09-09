@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/senseaudio-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed SenseAudio media-understanding provider",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
