@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/mcp-github",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bundled bridge from mcp-attested to GitHub's first-party MCP server (github/github-mcp-server). Wires the PAT (ENCLAWED_GITHUB_TOKEN) as bearer auth and declares the tool allowlist that the admission gate enforces.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=22" },
+  "enclawed": {
+    "extensions": ["./src/index.ts"]
+  }
+}

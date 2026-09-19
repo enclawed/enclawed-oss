@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mcp-imap-smtp",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "QROoWeR+3eDaWRhj9LS8aOviEtasfZJdhHUVjRGHxaVx1nqOfP9wlLMQ8r6cXwYdRIZ8SM4wSRtAL5D41GCGCQ=="
+}

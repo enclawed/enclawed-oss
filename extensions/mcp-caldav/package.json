@@ -1,0 +1,23 @@
+{
+  "name": "@enclawed/mcp-caldav",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bundled bridge: protocol-level CalDAV MCP server. Translates the MCP tools/call envelope into CalDAV REPORT / PROPFIND / GET against any IETF-compliant CalDAV host (Google, Fastmail, iCloud, Apple, Radicale, self-hosted Baikal). Authenticated by the same app-specific password as the IMAP+SMTP bridge.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "ical.js": "^2.2.1",
+    "tsdav": "^2.2.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "enclawed": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  }
+}
