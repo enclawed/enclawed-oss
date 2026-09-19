@@ -1,0 +1,28 @@
+{
+  "name": "@enclawed/qa-matrix",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed Matrix QA runner plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/matrix": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.16"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    }
+  }
+}

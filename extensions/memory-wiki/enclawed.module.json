@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "memory-wiki",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "lS8IgJDkzu/mt2pMALLmNy9OuWxRHFcG2alxCPk/jJ/KDE/OfNOaeXFYFNXdtOAOWYsV69d6j32eMtqbBNw1Cg=="
+}

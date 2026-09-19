@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "voice-call",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "KQ80MYoX//eWUkY/d7D9aaXX8ZMCYAlA4O0QkCD7iwyTj+KyohoDFujsB7SyCaVG8nPpZUmJFCrkqWymQ9ZbAw=="
+}

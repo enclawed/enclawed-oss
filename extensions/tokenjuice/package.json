@@ -1,0 +1,17 @@
+{
+  "name": "@enclawed/tokenjuice",
+  "version": "2026.4.25",
+  "description": "Bundled tokenjuice exec output compaction plugin",
+  "type": "module",
+  "dependencies": {
+    "tokenjuice": "0.7.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

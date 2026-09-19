@@ -1,0 +1,67 @@
+{
+  "name": "@enclawed/msteams",
+  "version": "2026.4.25",
+  "description": "Enclawed Microsoft Teams channel plugin",
+  "type": "module",
+  "dependencies": {
+    "@azure/identity": "4.13.1",
+    "@microsoft/teams.api": "2.0.9",
+    "@microsoft/teams.apps": "2.0.9",
+    "express": "5.2.1",
+    "jsonwebtoken": "9.0.3",
+    "jwks-rsa": "4.0.1",
+    "typebox": "1.1.37"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "@types/jsonwebtoken": "^9.0.10",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "msteams",
+      "label": "Microsoft Teams",
+      "selectionLabel": "Microsoft Teams (Teams SDK)",
+      "docsPath": "/channels/msteams",
+      "docsLabel": "msteams",
+      "blurb": "Teams SDK; enterprise support.",
+      "aliases": [
+        "teams"
+      ],
+      "order": 60,
+      "doctorCapabilities": {
+        "dmAllowFromMode": "topOnly",
+        "groupModel": "hybrid",
+        "groupAllowFromFallbackToAllowFrom": false,
+        "warnOnEmptyGroupSenderAllowlist": true
+      }
+    },
+    "install": {
+      "npmSpec": "@enclawed/msteams",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=0.2.0"
+    },
+    "compat": {
+      "pluginApi": ">=0.2.0"
+    },
+    "build": {
+      "enclawedVersion": "2026.4.25"
+    },
+    "release": {
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}
