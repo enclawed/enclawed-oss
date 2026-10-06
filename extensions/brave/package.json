@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/brave-plugin",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Brave plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

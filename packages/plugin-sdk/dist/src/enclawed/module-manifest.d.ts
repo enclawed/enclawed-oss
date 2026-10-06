@@ -1,0 +1,20 @@
+export type ClearanceLevel = string;
+export declare const LEGACY_CLEARANCE_ORDER: Record<string, number>;
+export declare const CLEARANCE_ORDER: Record<string, number>;
+export declare function clearanceToRank(name: string): number | undefined;
+export type ModuleManifest = Readonly<{
+    v: 1;
+    id: string;
+    publisher: string;
+    version: string;
+    clearance: ClearanceLevel;
+    capabilities: ReadonlyArray<string>;
+    signerKeyId?: string;
+    signature?: string;
+    verification?: string;
+    netAllowedHosts?: ReadonlyArray<string>;
+}>;
+export declare function parseManifest(raw: unknown): ModuleManifest;
+export declare function canonicalManifestBytes(manifest: ModuleManifest): Buffer;
+export declare function canonicalManifestHash(manifest: ModuleManifest): string;
+export declare function meetsClearance(actual: ClearanceLevel, required: ClearanceLevel): boolean;

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mcp-caldav",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "IB7iMKd6EukolilawG3Bci1PJXotTI9X2Gn7+D21+i36ddhlR4utPwe0Kq9p6tNASzVyk8rPK94UTxPt9iV+Aw=="
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/nvidia-provider",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed NVIDIA provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

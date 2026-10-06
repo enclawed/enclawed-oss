@@ -1,0 +1,43 @@
+{
+  "id": "mcp-github",
+  "name": "GitHub MCP bridge",
+  "description": "First-party GitHub MCP bridge: connects mcp-attested to github/github-mcp-server, using ENCLAWED_GITHUB_TOKEN as bearer auth and enforcing a closed tool allowlist (pulls/issues/repos/search).",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  },
+  "tools": [
+    "github.pulls.get",
+    "github.pulls.list",
+    "github.pulls.list_files",
+    "github.pulls.list_reviews",
+    "github.pulls.create_review",
+    "github.pulls.create_review_comment",
+    "github.pulls.update_branch",
+    "github.issues.get",
+    "github.issues.list",
+    "github.issues.create",
+    "github.issues.create_comment",
+    "github.issues.update",
+    "github.repos.get",
+    "github.repos.get_content",
+    "github.repos.list_commits",
+    "github.search.code",
+    "github.search.issues",
+    "github.search.repos"
+  ],
+  "env": {
+    "required": ["ENCLAWED_GITHUB_TOKEN"],
+    "optional": ["ENCLAWED_GITHUB_REPO", "ENCLAWED_GITHUB_MCP_ENDPOINT"]
+  },
+  "endpoints": {
+    "default": "http://127.0.0.1:8744/mcp/v1"
+  },
+  "scopes-suggested": [
+    "repo (classic) — or fine-grained:",
+    "pull_requests: read+write",
+    "contents: read",
+    "issues: read+write (only if github.issues.* tools are kept)"
+  ]
+}

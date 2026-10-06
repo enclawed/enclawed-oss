@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "openshell",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "y/B6DXaKbCzhKuxhwQ1pTiKJwOJAoALLGAaFsnxDYu9WlmsOXOU88trktrfnFWX6jB5DEXEJRCUqH45zEOydDA=="
+}

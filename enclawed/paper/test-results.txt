@@ -1,0 +1,67 @@
+enclawed test suite — final pre-paper run
+Captured 2026-04-17, Node v22.11.0
+
+Command:
+  node --test --test-reporter=spec \
+       enclawed/test/*.test.mjs \
+       enclawed/test/security/*.pentest.mjs \
+       extensions/mcp-attested/test/*.test.mjs
+
+Aggregate:
+  ℹ tests       153
+  ℹ pass        153
+  ℹ fail        0
+  ℹ duration_ms ~402
+
+Per-file unit-test breakdown (95 cases):
+   13  enclawed/test/classification.test.mjs
+   11  enclawed/test/classification-scheme.test.mjs
+   11  enclawed/test/dlp-scanner.test.mjs
+    9  enclawed/test/policy.test.mjs
+    8  enclawed/test/module-loader.test.mjs
+    7  enclawed/test/crypto-fips.test.mjs
+    7  enclawed/test/zeroize.test.mjs
+    6  enclawed/test/egress-guard.test.mjs
+    6  enclawed/test/module-manifest.test.mjs
+    5  enclawed/test/flavor.test.mjs
+    4  enclawed/test/audit-log.test.mjs
+    4  enclawed/test/module-signing.test.mjs
+    4  extensions/mcp-attested/test/server-clearance.test.mjs
+   ---
+   95
+
+Per-file pen-test breakdown (58 cases):
+   11  enclawed/test/security/prompt-injection.pentest.mjs
+   10  enclawed/test/security/trust-root-and-scheme.pentest.mjs
+    8  enclawed/test/security/code-injection.pentest.mjs
+    8  enclawed/test/security/dlp-evasion.pentest.mjs
+    8  enclawed/test/security/egress-bypass.pentest.mjs
+    7  enclawed/test/security/signature-forgery.pentest.mjs
+    6  enclawed/test/security/audit-log.pentest.mjs
+   ---
+   58
+
+TypeScript strict typecheck:
+  Command: tsc --noEmit --strict --target ES2022 --module NodeNext \
+                --moduleResolution NodeNext --types @types/node --skipLibCheck \
+                <19 framework files>
+  Result:  exit 0 — zero diagnostics
+
+Codebase footprint:
+  Framework TS (src/enclawed/, integration shims): 19 files,  2,315 LOC
+  Canonical .mjs reference (enclawed/src/):       16 files,  1,331 LOC
+  Standalone tests (enclawed/test/, security/):   19 files,  1,697 LOC
+  mcp-attested module (TS + test):                 5 files,    305 LOC
+  Upstream patches (4 files):                              +82 lines
+    - src/entry.ts                                          +10
+    - src/plugins/channel-validation.ts                     +27
+    - src/plugins/provider-validation.ts                    +27
+    - src/logging/subsystem.ts                              +18
+
+Module deletion footprint:
+  78 module directories removed from extensions/
+    25 cloud channels      (whatsapp, telegram, slack, discord, signal, ...)
+    45 cloud LLM providers (openai, anthropic, google, mistral, groq, ...)
+     8 external search/browser/webhooks
+  35 modules retained, all local or local-capable
+   1 module added: extensions/mcp-attested/  (signed reference)

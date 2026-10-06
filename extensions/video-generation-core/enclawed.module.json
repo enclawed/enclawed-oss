@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "video-generation-core",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "oJ9+knphDAvItM9l+nmnWHFoD6MONg8AFBe2u/0r1GFtqKdTzoFD3C0Zof3UQyvtgsTVU3FMZSZ/WkAOWqptAw=="
+}

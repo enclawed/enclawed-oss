@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/venice-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Venice provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

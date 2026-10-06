@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "bluebubbles",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "DJWXBlwRtvow+pRwHBbpMS32CcynyQxEPSVrK3FXzHlaW83tHV79H1oXpzTQ6Bwbm2tC00LIkqWXIjN9XgXkBg=="
+}

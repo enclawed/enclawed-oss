@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "id": "enclawed-app-executive-assistant",
+  "version": 1,
+  "caps": ["fs.read", "fs.write.rev", "net.egress", "spawn.proc"],
+  "label": { "level": 1, "compartments": [], "releasability": [] },
+  "signer": "enclawed-app-self"
+}

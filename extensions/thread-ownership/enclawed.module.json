@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "thread-ownership",
+  "publisher": "enclawed-bundled",
+  "version": "0.0.0",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "5AbM/LZNn6aCfRkckb4mUMFoWiKcQw6sEscGxZwUY2pXplp9Xmn5nRdwGEx1K0uHI0O5tigI6FYTcWDUTuiVAA=="
+}

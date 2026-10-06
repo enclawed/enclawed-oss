@@ -1,0 +1,22 @@
+{
+  "name": "@enclawed/mcp-carddav",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bundled bridge: protocol-level CardDAV MCP server. Translates the MCP tools/call envelope into CardDAV REPORT (addressbook-query) and GET against any IETF-compliant CardDAV host. Authenticated by the same app-specific password as the IMAP+SMTP and CalDAV bridges. Provider-agnostic.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "tsdav": "^2.2.2"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "enclawed": {
+    "extensions": [
+      "./src/index.ts"
+    ]
+  }
+}

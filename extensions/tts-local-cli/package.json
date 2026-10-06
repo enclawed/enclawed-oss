@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/tts-local-cli",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed local CLI TTS plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

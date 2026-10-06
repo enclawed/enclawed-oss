@@ -1,0 +1,41 @@
+{
+  "name": "@enclawed/qa-channel",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed QA synthetic channel plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.16"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "setupEntry": "./setup-entry.ts",
+    "channel": {
+      "id": "qa-channel",
+      "label": "QA Channel",
+      "selectionLabel": "QA Channel (Synthetic)",
+      "detailLabel": "QA Channel",
+      "docsPath": "/channels/qa-channel",
+      "docsLabel": "qa-channel",
+      "blurb": "Synthetic Slack-class transport for automated Enclawed QA scenarios.",
+      "systemImage": "checklist",
+      "order": 999,
+      "exposure": {
+        "configured": false,
+        "setup": false,
+        "docs": false
+      }
+    }
+  }
+}

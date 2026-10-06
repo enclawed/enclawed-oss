@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "qa-lab",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "lQk8qhD2X0FRCCnscPVdycRwgZIReICSeQo9icW4sA0OFBGqhAJ1zkCAYW2GkNRuRdZP5r/Q4Iqon4VFdD0rDA=="
+}

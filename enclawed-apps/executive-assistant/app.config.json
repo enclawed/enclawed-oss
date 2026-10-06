@@ -1,0 +1,56 @@
+{
+  "id": "executive-assistant",
+  "name": "AI Executive Assistant",
+  "package": "enclawed-executive-assistant-app",
+  "provider": {
+    "type": "imap-caldav-carddav",
+    "services": ["mail", "calendar", "contacts"],
+    "appPasswordUrl": "https://myaccount.google.com/apppasswords",
+    "imap": {
+      "host": "imap.gmail.com",
+      "port": 993,
+      "secure": true
+    },
+    "smtp": {
+      "host": "smtp.gmail.com",
+      "port": 465,
+      "secure": true
+    },
+    "caldav": {
+      "serverUrl": "https://apidata.googleusercontent.com/caldav/v2/"
+    },
+    "carddav": {
+      "serverUrl": "https://www.googleapis.com/.well-known/carddav"
+    }
+  },
+  "llm": {
+    "type": "ollama",
+    "model": "qwen2.5:32b-instruct",
+    "classifierModel": "llama3.1:8b"
+  },
+  "mailbox": {
+    "envVar": "ENCLAWED_EXECUTIVE_ASSISTANT_MAILBOX_EMAIL",
+    "prompt": "Email address of the SECRETARY itself — the mailbox the agent signs in to (its IMAP/SMTP credentials). NOT your personal address. Recommended: a dedicated account (e.g. yourname-executive assistant@gmail.com) so the executive assistant's traffic is isolated from your personal mail"
+  },
+  "principal": {
+    "envVar": "ENCLAWED_EXECUTIVE_ASSISTANT_PRINCIPAL_EMAIL",
+    "prompt": "Principal email — YOUR personal address, the human authorized to administrate this executive assistant. The HITL approval emails will be sent here and matched against this address when you reply. Defaults to the executive assistant mailbox itself (self-admin install)"
+  },
+  "persona": {
+    "displayNameEnvVar": "ENCLAWED_EXECUTIVE_ASSISTANT_DISPLAY_NAME",
+    "systemPromptEnvVar": "ENCLAWED_EXECUTIVE_ASSISTANT_SYSTEM_PROMPT",
+    "defaultDisplayName": "Executive Assistant",
+    "defaultSystemPrompt": ""
+  },
+  "service": {
+    "id": "com.enclawed.executive-assistant",
+    "description": "Enclawed AI Executive Assistant",
+    "extraEnv": {
+      "ENCLAWED_FIPS_REQUIRED": "0",
+      "ENCLAWED_FLAVOR": "enclaved"
+    }
+  },
+  "labels": [{ "name": "enclawed/processed" }, { "name": "enclawed/auto-trash-eod" }],
+  "docsUrl": "https://www.enclawed.com/enclawed-apps/executive-assistant",
+  "serviceReady": true
+}

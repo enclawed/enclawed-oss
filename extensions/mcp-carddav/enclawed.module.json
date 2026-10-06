@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mcp-carddav",
+  "publisher": "enclawed-bundled",
+  "version": "0.1.0",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "mBu4at/eYvftxBuodX/S8Sm4ugTGxK7ICC4DWLOOXNkCqllltEkZOHi/nPAyQbdh1HnGyMan0kJWQioiC7eWAw=="
+}

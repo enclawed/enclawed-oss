@@ -1,0 +1,14 @@
+{
+  "name": "enclawed",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone .mjs reference of the enclawed hardening framework: classification, policy, audit, signing, HITL, transaction buffer, prompt shield. Hard fork of Enclawed. NOT an accredited classified-data configuration. See FORK.md.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.mjs test/security/*.pentest.mjs",
+    "demo": "node demo/demo.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

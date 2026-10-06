@@ -1,0 +1,19 @@
+{
+  "name": "@enclawed/openai-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed OpenAI provider plugins",
+  "type": "module",
+  "dependencies": {
+    "@mariozechner/pi-ai": "npm:@earendil-works/pi-ai@^0.80.2",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
