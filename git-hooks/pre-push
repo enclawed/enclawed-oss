@@ -1,0 +1,24 @@
+#!/bin/sh
+# Refuse to push a tree whose dependencies carry any known vulnerability.
+# The count has to stay at zero; see scripts/check-audit-zero.mjs.
+#
+# Offline, the audit cannot run: the push goes ahead with a warning, because
+# the gates on what actually ships (the public snapshot, the customer tarball)
+# fail closed on their own. SKIP_AUDIT_GATE=1 is deliberately not offered.
+
+root="$(git rev-parse --show-toplevel)" || exit 1
+node "$root/scripts/check-audit-zero.mjs"
+status=$?
+
+case "$status" in
+  0) exit 0 ;;
+  3)
+    echo "pre-push: dependency audit could not run; pushing unverified." >&2
+    echo "          Release gates will re-check before anything ships." >&2
+    exit 0
+    ;;
+  *)
+    echo "pre-push: REFUSED -- known vulnerabilities in the dependency tree." >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,27 @@
+{
+  "name": "@enclawed/migrate-hermes",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Hermes to Enclawed migration provider",
+  "type": "module",
+  "dependencies": {
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*",
+    "enclawed": "workspace:*"
+  },
+  "peerDependencies": {
+    "enclawed": ">=2026.4.25"
+  },
+  "peerDependenciesMeta": {
+    "enclawed": {
+      "optional": true
+    }
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

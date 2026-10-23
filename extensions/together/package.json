@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/together-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Together provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

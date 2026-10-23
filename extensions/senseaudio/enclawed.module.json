@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "senseaudio",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "6jMLP4naH7Jj8KfpwncD2YrujwrWFabsfoYBPVAu21FEONsCXE5nYHbErYGH3hWOT+pEMBSuY3ms9STGEpjrAA=="
+}
