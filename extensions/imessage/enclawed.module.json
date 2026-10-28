@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "imessage",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "+uUM4YXIa7GoiEzyLHL5xDJP9Gul7QoGxyil2JwkbaAs/a1PrvyTzQ0fl/5IDaJBklFFOgO2taSP+Vn5cHYmCQ=="
+}

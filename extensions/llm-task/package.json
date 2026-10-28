@@ -1,0 +1,19 @@
+{
+  "name": "@enclawed/llm-task",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed JSON-only LLM task plugin",
+  "type": "module",
+  "dependencies": {
+    "@sinclair/typebox": "0.34.49",
+    "ajv": "^8.18.0"
+  },
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

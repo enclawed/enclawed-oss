@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/mcp-google-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bundled bridge from mcp-attested to Google's first-party Workspace MCP servers (Gmail, Calendar, Drive, Chat, People). Wires OAuth bearer-token auth and declares the per-server tool allowlist that the admission gate enforces.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": { "node": ">=22" },
+  "enclawed": {
+    "extensions": ["./src/index.ts"]
+  }
+}

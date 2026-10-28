@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "tokenjuice",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "9fNLJ/1QVkTp2REMgV9+JJYYO6YKmrXtF1Fy/VNKWnO8wcJyHKleTNZXd0WCMzA3QsHiE2MXCdrk5yfJvEyvAg=="
+}

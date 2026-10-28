@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "qianfan",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "etiscILtT4munWqkqk8l6FOVvpO0x4lO1+u7oy9I8h/XSod213/uIpWFX6lvSV92BrtXnHAuI0BCP4LwMBqiDw=="
+}

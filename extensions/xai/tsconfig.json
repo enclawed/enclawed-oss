@@ -1,0 +1,64 @@
+{
+  "extends": "../tsconfig.package-boundary.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "paths": {
+      "@enclawed/extension-api": ["../../src/extensionAPI.ts"],
+      "@enclawed/plugin-sdk": ["../../dist/plugin-sdk/src/plugin-sdk/index.d.ts"],
+      "@enclawed/plugin-sdk/*": ["../../dist/plugin-sdk/src/plugin-sdk/*.d.ts"],
+      "@enclawed/plugin-sdk/account-id": ["../../dist/plugin-sdk/src/plugin-sdk/account-id.d.ts"],
+      "@enclawed/plugin-sdk/channel-entry-contract": [
+        "../../dist/plugin-sdk/src/plugin-sdk/channel-entry-contract.d.ts"
+      ],
+      "@enclawed/plugin-sdk/browser-maintenance": [
+        "../../dist/plugin-sdk/src/plugin-sdk/browser-maintenance.d.ts"
+      ],
+      "@enclawed/plugin-sdk/channel-secret-runtime": [
+        "../../dist/plugin-sdk/src/plugin-sdk/channel-secret-runtime.d.ts"
+      ],
+      "@enclawed/plugin-sdk/channel-streaming": [
+        "../../dist/plugin-sdk/src/plugin-sdk/channel-streaming.d.ts"
+      ],
+      "@enclawed/plugin-sdk/cli-runtime": ["../../dist/plugin-sdk/src/plugin-sdk/cli-runtime.d.ts"],
+      "@enclawed/plugin-sdk/error-runtime": [
+        "../../dist/plugin-sdk/src/plugin-sdk/error-runtime.d.ts"
+      ],
+      "@enclawed/plugin-sdk/provider-catalog-shared": [
+        "../../dist/plugin-sdk/src/plugin-sdk/provider-catalog-shared.d.ts"
+      ],
+      "@enclawed/plugin-sdk/provider-env-vars": [
+        "../../dist/plugin-sdk/src/plugin-sdk/provider-env-vars.d.ts"
+      ],
+      "@enclawed/plugin-sdk/provider-entry": [
+        "../../dist/plugin-sdk/src/plugin-sdk/provider-entry.d.ts"
+      ],
+      "@enclawed/plugin-sdk/provider-web-search-contract": [
+        "../../dist/plugin-sdk/src/plugin-sdk/provider-web-search-contract.d.ts"
+      ],
+      "@enclawed/plugin-sdk/secret-ref-runtime": [
+        "../../dist/plugin-sdk/src/plugin-sdk/secret-ref-runtime.d.ts"
+      ],
+      "@enclawed/plugin-sdk/ssrf-runtime": [
+        "../../dist/plugin-sdk/src/plugin-sdk/ssrf-runtime.d.ts"
+      ],
+      "@enclawed/qa-channel/api.js": ["../../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
+      "@enclawed/*.js": ["../../packages/plugin-sdk/dist/extensions/*.d.ts", "../*"],
+      "@enclawed/*": ["../*"],
+      "@enclawed/plugin-sdk/*": ["../../dist/plugin-sdk/src/plugin-sdk/*.d.ts"],
+      "@enclawed/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
+      "@enclawed/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
+      "@enclawed/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
+      "@enclawed/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"]
+    }
+  },
+  "include": ["./*.ts", "./src/**/*.ts"],
+  "exclude": [
+    "./**/*.test.ts",
+    "./dist/**",
+    "./node_modules/**",
+    "./src/test-support/**",
+    "./src/**/*test-helpers.ts",
+    "./src/**/*test-harness.ts",
+    "./src/**/*test-support.ts"
+  ]
+}

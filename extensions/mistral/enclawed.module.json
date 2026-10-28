@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "mistral",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "/AzucS5XUz65L5odMUz2N1NxbekplR44Llm+4RqtLpgs2g7XixpwxqqfJH6einfXG1cUNVy+jE3Ga5aGqttTCw=="
+}

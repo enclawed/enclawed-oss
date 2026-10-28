@@ -1,0 +1,10 @@
+{
+  "name": "@enclawed/video-generation-core",
+  "version": "2026.4.16",
+  "private": true,
+  "description": "Enclawed video generation runtime package",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  }
+}
