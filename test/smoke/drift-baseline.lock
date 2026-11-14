@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "comment": "G2 drift-baseline lock. SHA-256 of the canonical JSON {\"subpaths\":[…sorted],\"symbols\":[…sorted]} built from KNOWN_MISSING_SUBPATHS + KNOWN_MISSING_SYMBOLS in bundle-loadability.test.ts. The smoke test hashes the same canonical structure at run time and fails if it does not equal `expected`. Allowlist may shrink — to grow it, update this lock in the same PR so the change is visible in review.",
+  "canonical": "{\"subpaths\":[],\"symbols\":[]}",
+  "expected": "17e51a4fbff5554587b6b7a7c4a06ef8bb425d0097650b99a394dfec84b1b961"
+}

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "telegram",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["publish"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "jhMeXqyYAwU9pGY91D8Q/C1aFHd0t4RCFCkC+bhYJsJDfb+JsAnmy1VZ80Lxf8BXwo+uIyvkgSjVt28u2qChCg=="
+}

@@ -1,0 +1,6 @@
+# Lines that scripts/check-hardware-disclosure.mjs flagged, that a human checked
+# and judged fine to publish. One fingerprint per line: a hash of the file path and
+# the line's text, so editing the line makes the check look at it again.
+# Add entries with: node scripts/check-hardware-disclosure.mjs --print-reviewed
+
+62604184f0908ecf  # extensions/open-prose/skills/prose/prose.md:90 silicon — "silicon" as a metaphor for computers, reviewed 2026-10-21

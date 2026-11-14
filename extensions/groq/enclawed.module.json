@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "groq",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "erxFNMpQrPMQQydyjR2AQ5pyBXzSq2yLM6u14eull798dJAQvmH5cQLwYVwaDtVITxpybf0FpwyvCZ9dEfCWDA=="
+}

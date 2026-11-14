@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "minimax",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "Wr3TpxCFTD70oHwEb1GTqPMnhjhJS1pJRcNqFh8z93aQew/cQ+VMfRSmEhodV2u4Lc6F3igIojcF4XcM5hJTCA=="
+}
