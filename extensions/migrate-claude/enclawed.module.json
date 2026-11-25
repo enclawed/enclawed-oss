@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "migrate-claude",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.26",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "4zV+yMW9dRdrOy6bVYtbw08gbo4/gf26lOmVaX/qDFlR1BHlmfhAbm5Ry6dUC1qsKZOM9sovGATbXUBngyU/Aw=="
+}

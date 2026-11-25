@@ -1,0 +1,16 @@
+{
+  "name": "@enclawed/egress-entropy-scanner",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Token-entropy payload scanner stage for the egress reference monitor",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

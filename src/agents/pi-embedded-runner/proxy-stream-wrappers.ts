@@ -1,0 +1,162 @@
+import type { StreamFn } from "@mariozechner/pi-agent-core";
+import { streamSimple } from "@mariozechner/pi-ai/compat";
+import type { ThinkLevel } from "../../auto-reply/thinking.js";
+import { isProxyReasoningUnsupportedModelHint } from "../../plugin-sdk/provider-model-shared.js";
+import { stripNullHeaderValues } from "../../plugin-sdk/provider-stream-shared.js";
+import { normalizeOptionalLowercaseString, readStringValue } from "../../shared/string-coerce.js";
+import { resolveProviderRequestPolicy } from "../provider-attribution.js";
+import { resolveProviderRequestPolicyConfig } from "../provider-request-config.js";
+import { applyAnthropicEphemeralCacheControlMarkers } from "./anthropic-cache-control-payload.js";
+import { isAnthropicModelRef } from "./anthropic-family-cache-semantics.js";
+import { streamWithPayloadPatch } from "./stream-payload-utils.js";
+const KILOCODE_FEATURE_HEADER = "X-KILOCODE-FEATURE";
+const KILOCODE_FEATURE_ENV_VAR = "KILOCODE_FEATURE";
+
+// Kilo's feature-attribution header is optional. Enclawed does not identify
+// itself to providers, so it is sent only when the operator sets
+// KILOCODE_FEATURE explicitly.
+function resolveKilocodeAppHeaders(): Record<string, string> | undefined {
+  const feature = process.env[KILOCODE_FEATURE_ENV_VAR]?.trim();
+  return feature ? { [KILOCODE_FEATURE_HEADER]: feature } : undefined;
+}
+
+function mapThinkingLevelToOpenRouterReasoningEffort(
+  thinkingLevel: ThinkLevel,
+): "none" | "minimal" | "low" | "medium" | "high" | "xhigh" {
+  if (thinkingLevel === "off") {
+    return "none";
+  }
+  if (thinkingLevel === "adaptive") {
+    return "medium";
+  }
+  // OpenRouter does not advertise a "max" effort; surface it as "xhigh" to
+  // align with the strongest reasoning level the upstream API accepts.
+  if (thinkingLevel === "max") {
+    return "xhigh";
+  }
+  return thinkingLevel;
+}
+
+function normalizeProxyReasoningPayload(payload: unknown, thinkingLevel?: ThinkLevel): void {
+  if (!payload || typeof payload !== "object") {
+    return;
+  }
+
+  const payloadObj = payload as Record<string, unknown>;
+  delete payloadObj.reasoning_effort;
+  if (!thinkingLevel || thinkingLevel === "off") {
+    return;
+  }
+
+  const existingReasoning = payloadObj.reasoning;
+  if (
+    existingReasoning &&
+    typeof existingReasoning === "object" &&
+    !Array.isArray(existingReasoning)
+  ) {
+    const reasoningObj = existingReasoning as Record<string, unknown>;
+    if (!("max_tokens" in reasoningObj) && !("effort" in reasoningObj)) {
+      reasoningObj.effort = mapThinkingLevelToOpenRouterReasoningEffort(thinkingLevel);
+    }
+  } else if (!existingReasoning) {
+    payloadObj.reasoning = {
+      effort: mapThinkingLevelToOpenRouterReasoningEffort(thinkingLevel),
+    };
+  }
+}
+
+export function createOpenRouterSystemCacheWrapper(baseStreamFn: StreamFn | undefined): StreamFn {
+  const underlying = baseStreamFn ?? streamSimple;
+  return (model, context, options) => {
+    const provider = readStringValue(model.provider);
+    const modelId = readStringValue(model.id);
+    // Keep OpenRouter-specific cache markers on verified OpenRouter routes
+    // (or the provider's default route), but not on arbitrary OpenAI proxies.
+    const endpointClass = resolveProviderRequestPolicy({
+      provider,
+      api: readStringValue(model.api),
+      baseUrl: readStringValue(model.baseUrl),
+      capability: "llm",
+      transport: "stream",
+    }).endpointClass;
+    if (
+      !modelId ||
+      !isAnthropicModelRef(modelId) ||
+      !(
+        endpointClass === "openrouter" ||
+        (endpointClass === "default" && normalizeOptionalLowercaseString(provider) === "openrouter")
+      )
+    ) {
+      return underlying(model, context, options);
+    }
+
+    return streamWithPayloadPatch(underlying, model, context, options, (payloadObj) => {
+      applyAnthropicEphemeralCacheControlMarkers(payloadObj);
+    });
+  };
+}
+
+export function createOpenRouterWrapper(
+  baseStreamFn: StreamFn | undefined,
+  thinkingLevel?: ThinkLevel,
+): StreamFn {
+  const underlying = baseStreamFn ?? streamSimple;
+  return (model, context, options) => {
+    const headers = resolveProviderRequestPolicyConfig({
+      provider: readStringValue(model.provider) ?? "openrouter",
+      api: readStringValue(model.api),
+      baseUrl: readStringValue(model.baseUrl),
+      capability: "llm",
+      transport: "stream",
+      callerHeaders: stripNullHeaderValues(options?.headers),
+      precedence: "caller-wins",
+    }).headers;
+    return streamWithPayloadPatch(
+      underlying,
+      model,
+      context,
+      {
+        ...options,
+        headers,
+      },
+      (payload) => {
+        normalizeProxyReasoningPayload(payload, thinkingLevel);
+      },
+    );
+  };
+}
+
+export function isProxyReasoningUnsupported(modelId: string): boolean {
+  return isProxyReasoningUnsupportedModelHint(modelId);
+}
+
+export function createKilocodeWrapper(
+  baseStreamFn: StreamFn | undefined,
+  thinkingLevel?: ThinkLevel,
+): StreamFn {
+  const underlying = baseStreamFn ?? streamSimple;
+  return (model, context, options) => {
+    const headers = resolveProviderRequestPolicyConfig({
+      provider: readStringValue(model.provider) ?? "kilocode",
+      api: readStringValue(model.api),
+      baseUrl: readStringValue(model.baseUrl),
+      capability: "llm",
+      transport: "stream",
+      callerHeaders: stripNullHeaderValues(options?.headers),
+      providerHeaders: resolveKilocodeAppHeaders(),
+      precedence: "defaults-win",
+    }).headers;
+    return streamWithPayloadPatch(
+      underlying,
+      model,
+      context,
+      {
+        ...options,
+        headers,
+      },
+      (payload) => {
+        normalizeProxyReasoningPayload(payload, thinkingLevel);
+      },
+    );
+  };
+}

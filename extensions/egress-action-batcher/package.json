@@ -1,0 +1,16 @@
+{
+  "name": "@enclawed/egress-action-batcher",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Action batcher for the egress reference monitor: canonical order, idempotent-repeat collapse and constant-set padding against choice-type covert channels",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@enclawed/egress-behavioral-invariants",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Stateful rate-limiting and side-channel shaping stage for the egress reference monitor",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

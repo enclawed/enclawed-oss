@@ -1,0 +1,44 @@
+{
+  "id": "egress-cover-traffic",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean"
+      },
+      "mode": {
+        "type": "string",
+        "enum": ["constant", "poisson"]
+      },
+      "meanIntervalMs": {
+        "type": "integer",
+        "minimum": 1000,
+        "maximum": 60000,
+        "description": "Mean interval between filler sends (ms; default 60000, range 1000-60000: a longer interval means almost no cover)."
+      },
+      "coverContent": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000,
+        "description": "Filler text (default [keepalive], 1-4000 characters). Pick text a destination observer cannot tell apart from real traffic."
+      },
+      "target": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": ["to"]
+      }
+    }
+  }
+}

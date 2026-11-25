@@ -1,0 +1,19 @@
+{
+  "name": "@enclawed/egress-mediator",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Covert/side-channel egress reference monitor",
+  "type": "module",
+  "dependencies": {
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

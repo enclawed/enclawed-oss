@@ -1,0 +1,14 @@
+{
+  "id": "egress-llm-scrambler",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Set false to disable this stage. The LLM and deterministic scramblers are alternatives; enable at most one in a production pipeline."
+      }
+    }
+  }
+}

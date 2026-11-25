@@ -1,0 +1,16 @@
+{
+  "id": "egress-replay-sentinel",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "historyPerSink": {
+        "type": "integer",
+        "minimum": 16,
+        "maximum": 1024,
+        "description": "Earlier messages kept per destination to compare each new message against (default 16, range 16-1024; a shorter history would miss replays). More history catches replays further apart at more memory per destination."
+      }
+    }
+  }
+}

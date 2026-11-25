@@ -1,0 +1,35 @@
+{
+  "id": "egress-image-scrambler",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Register the image scrambler (default true). Its enforce/audit/off mode is the mediator's stages[\"egress-image-scrambler\"] entry (default audit)."
+      },
+      "colorSpace": {
+        "type": "string",
+        "enum": ["rgb", "cmyk"],
+        "description": "Basis for the bit-depth requantization (default rgb). cmyk gives the same bit defense at slightly more visible change."
+      },
+      "colorSpaceRoundtrip": {
+        "type": "boolean",
+        "description": "Deprecated alias for colorSpace: true means cmyk, false means rgb. Refused if it conflicts with colorSpace."
+      },
+      "depthLevels": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 64,
+        "description": "Levels per color and alpha channel (default 64 = 6 bits, which destroys bit-0 and bit-1 stego at a change of at most 2/255; range 2-64, since more levels keep low-order stego bits)."
+      },
+      "luminanceBuckets": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 8,
+        "description": "Snap each image mean brightness to one of this many levels, bounding that channel to log2(buckets) bits per image (default 8 = 3 bits; range 2-8)."
+      }
+    }
+  }
+}

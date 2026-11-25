@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "skill-workshop",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "vbIcuJ6jTxEyKqmuywX2Zbyl6D4Th7e31wHkhkhQT07fISrzymaAhkyVI/+w4fFhMu61gMDO7DZ6AieBJwCzCA=="
+}

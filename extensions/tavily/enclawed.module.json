@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "tavily",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["tool.invoke"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "5R4O79mqDozxrEfNxu+sb2mgzapxUYZO6MRCtWuELYkY3E6gMeR8M2yFYbYaWR8+OHQBP6CLPBqZXevELo1wCg=="
+}

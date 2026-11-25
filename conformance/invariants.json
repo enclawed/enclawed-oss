@@ -1,0 +1,151 @@
+{
+  "v": 1,
+  "invariants": [
+    {
+      "id": "mcp-definition-drift",
+      "title": "MCP tool-definition drift",
+      "tests": [
+        "src/enclawed/mcp-tool-pins.test.ts",
+        "src/agents/pi-bundle-mcp-runtime.drift.test.ts"
+      ]
+    },
+    {
+      "id": "mcp-untrusted-results",
+      "title": "Untrusted tool results",
+      "tests": [
+        "src/agents/pi-tool-definition-adapter.untrusted-result.test.ts",
+        "src/agents/pi-embedded-runner.splitsdktools.test.ts",
+        "test/egress-suite/pipeline.integration.test.ts"
+      ]
+    },
+    {
+      "id": "approval-replay",
+      "title": "Approval single use and binding",
+      "tests": [
+        "src/gateway/exec-approval-replay.test.ts",
+        "src/gateway/node-invoke-system-run-approval.test.ts",
+        "src/gateway/node-invoke-system-run-approval-match.test.ts",
+        "src/agents/tool-call-approval-binding.test.ts"
+      ]
+    },
+    {
+      "id": "approval-toctou",
+      "title": "Approval-to-execution resource changes",
+      "tests": ["src/agents/tool-call-approval-binding.test.ts"]
+    },
+    {
+      "id": "irreversible-approval",
+      "title": "Irreversible actions wait for a person",
+      "tests": ["src/enclawed/agent-tool-guard.test.ts", "src/enclawed/fs-reversibility.test.ts"]
+    },
+    {
+      "id": "egress-mediation",
+      "title": "Egress mediation",
+      "tests": [
+        "packages/egress-core/src/runner.test.ts",
+        "extensions/egress-canonicalizer/src/stage.test.ts",
+        "extensions/egress-taint-tracker/src/stage.test.ts",
+        "test/egress-suite/pipeline.integration.test.ts",
+        "test/egress-suite/taint-and-media.integration.test.ts",
+        "src/enclawed/integration.test.ts"
+      ]
+    },
+    {
+      "id": "egress-choice-channels",
+      "title": "Choice-channel batcher",
+      "tests": [
+        "packages/egress-core/src/action-batcher.test.ts",
+        "packages/egress-core/src/action-batcher.adversarial.test.ts",
+        "packages/egress-core/src/action-batcher.honest.test.ts",
+        "test/egress-suite/action-batcher.integration.test.ts"
+      ]
+    },
+    {
+      "id": "egress-request-shape",
+      "title": "Registry request shapes",
+      "tests": [
+        "src/enclawed/containment/request-shape.test.ts",
+        "src/enclawed/containment/relay-shape.test.ts",
+        "src/enclawed/egress-target.test.ts"
+      ]
+    },
+    {
+      "id": "egress-no-free-form",
+      "title": "No free-form egress to declared destinations",
+      "tests": [
+        "src/enclawed/containment/request-shape-profiles.test.ts",
+        "src/enclawed/containment/relay-generic.test.ts"
+      ]
+    },
+    {
+      "id": "skill-per-call-conformance",
+      "title": "Per-call skill conformance",
+      "tests": [
+        "src/enclawed/adapter/skill-conformance.test.ts",
+        "src/enclawed/conformance/checks-adapter.test.ts"
+      ]
+    },
+    {
+      "id": "security-stage-fail-closed",
+      "title": "Fail-closed security plugins",
+      "tests": ["src/plugins/loader.security-stage.test.ts"]
+    },
+    {
+      "id": "escape-hatch-gate",
+      "title": "Escape-hatch gate",
+      "tests": ["src/security/enclaved-escape-hatches.test.ts"]
+    },
+    {
+      "id": "hardware-root-host-checks",
+      "title": "Hardware root, host side",
+      "tests": [
+        "src/enclawed/hardware-root/guard.genuine.test.ts",
+        "src/enclawed/hardware-root/broker.test.ts",
+        "src/enclawed/hardware-root/status-report.test.ts",
+        "src/enclawed/boot-env-knobs.test.ts",
+        "src/enclawed/agent-tool-guard.test.ts"
+      ]
+    },
+    {
+      "id": "hardware-root-session-anchor",
+      "title": "Hardware root, session anchor",
+      "tests": [
+        "src/enclawed/hardware-root/relayed-anchor.test.ts",
+        "src/enclawed/adapter/launch-surfaces.test.ts"
+      ]
+    },
+    {
+      "id": "mcp-attested-admission",
+      "title": "MCP server admission",
+      "tests": [
+        "extensions/mcp-attested/src/adversarial.test.ts",
+        "extensions/mcp-attested/src/client-admission.test.ts"
+      ]
+    },
+    {
+      "id": "conformance-self-check",
+      "title": "The shipped self-check",
+      "tests": ["src/enclawed/conformance/conformance.test.ts", "test/conformance-index.test.ts"]
+    },
+    {
+      "id": "contained-code-pins",
+      "title": "Contained runs load only the code Enclawed read",
+      "tests": ["src/enclawed/adapter/contained-code-pins.test.ts"]
+    },
+    {
+      "id": "approval-effect-confirmation",
+      "title": "Approvals state the effect and need an answer derived from it",
+      "tests": ["src/enclawed/adapter/approval-effect.test.ts"]
+    },
+    {
+      "id": "review-judge-no-influence",
+      "title": "Review judge, evaluation only",
+      "tests": ["src/enclawed/adapter/review-judge.test.ts"]
+    },
+    {
+      "id": "shell-definition-shadow",
+      "title": "Shell aliases and functions",
+      "tests": ["src/enclawed/adapter/shell-definitions.test.ts"]
+    }
+  ]
+}

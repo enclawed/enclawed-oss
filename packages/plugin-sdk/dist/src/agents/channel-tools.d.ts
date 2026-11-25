@@ -1,0 +1,64 @@
+import type { ChannelAgentTool, ChannelMessageActionName } from "../channels/plugins/types.public.js";
+import type { EnclawedConfig } from "../config/types.enclawed.js";
+type ChannelAgentToolMeta = {
+    channelId: string;
+};
+export declare function getChannelAgentToolMeta(tool: ChannelAgentTool): ChannelAgentToolMeta | undefined;
+export declare function copyChannelAgentToolMeta(source: ChannelAgentTool, target: ChannelAgentTool): void;
+/**
+ * Get the list of supported message actions for a specific channel.
+ * Returns an empty array if channel is not found or has no actions configured.
+ */
+export declare function listChannelSupportedActions(params: {
+    cfg?: EnclawedConfig;
+    channel?: string;
+    currentChannelId?: string | null;
+    currentThreadTs?: string | null;
+    currentMessageId?: string | number | null;
+    accountId?: string | null;
+    sessionKey?: string | null;
+    sessionId?: string | null;
+    agentId?: string | null;
+    requesterSenderId?: string | null;
+    senderIsOwner?: boolean;
+}): ChannelMessageActionName[];
+/**
+ * Get the list of all supported message actions across all configured channels.
+ */
+export declare function listAllChannelSupportedActions(params: {
+    cfg?: EnclawedConfig;
+    currentChannelId?: string | null;
+    currentThreadTs?: string | null;
+    currentMessageId?: string | number | null;
+    accountId?: string | null;
+    sessionKey?: string | null;
+    sessionId?: string | null;
+    agentId?: string | null;
+    requesterSenderId?: string | null;
+    senderIsOwner?: boolean;
+}): ChannelMessageActionName[];
+export declare function listChannelAgentTools(params: {
+    cfg?: EnclawedConfig;
+}): ChannelAgentTool[];
+export declare function resolveChannelMessageToolHints(params: {
+    cfg?: EnclawedConfig;
+    channel?: string | null;
+    accountId?: string | null;
+}): string[];
+export declare function resolveChannelMessageToolCapabilities(params: {
+    cfg?: EnclawedConfig;
+    channel?: string | null;
+    accountId?: string | null;
+}): string[];
+export declare function resolveChannelReactionGuidance(params: {
+    cfg?: EnclawedConfig;
+    channel?: string | null;
+    accountId?: string | null;
+}): {
+    level: "minimal" | "extensive";
+    channel: string;
+} | undefined;
+export declare const __testing: {
+    resetLoggedListActionErrors(): void;
+};
+export {};

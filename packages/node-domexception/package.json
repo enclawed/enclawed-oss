@@ -1,0 +1,23 @@
+{
+  "name": "@enclawed/node-domexception",
+  "version": "1.0.0",
+  "description": "Node's built-in DOMException, for packages that still depend on the deprecated node-domexception.",
+  "license": "MIT",
+  "author": "Alfredo Metere <alfredo.metere@enclawed.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enclawed/enclawed-oss.git",
+    "directory": "packages/node-domexception"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=17"
+  }
+}

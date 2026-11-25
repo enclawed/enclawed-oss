@@ -1,0 +1,16 @@
+{
+  "name": "@enclawed/egress-image-scrambler",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Color-space and bit-depth image media scrambler for the egress reference monitor",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

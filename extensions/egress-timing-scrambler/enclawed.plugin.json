@@ -1,0 +1,26 @@
+{
+  "id": "egress-timing-scrambler",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Register the timing-scrambler stage (default true). Its enforce/audit/off mode is the mediator's stages[\"egress-timing-scrambler\"] entry."
+      },
+      "minDelayMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 600000,
+        "description": "Shortest random delay added before each outbound send (default 0 ms, range 0-600000). maxDelayMs - minDelayMs must be at least 750 ms."
+      },
+      "maxDelayMs": {
+        "type": "integer",
+        "minimum": 750,
+        "maximum": 600000,
+        "description": "Longest random delay (default 750 ms, range 750-600000; maxDelayMs - minDelayMs must be at least 750 ms). The delay is drawn uniformly from the cryptographic RNG; a wider range removes more of a timing signal at more latency."
+      }
+    }
+  }
+}

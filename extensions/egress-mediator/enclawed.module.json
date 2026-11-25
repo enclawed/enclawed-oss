@@ -1,0 +1,10 @@
+{
+  "v": 1,
+  "id": "egress-mediator",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "verification": "tested",
+  "netAllowedHosts": []
+}

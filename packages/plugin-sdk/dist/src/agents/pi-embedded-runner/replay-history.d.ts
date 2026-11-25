@@ -1,0 +1,45 @@
+import type { AgentMessage } from "@mariozechner/pi-agent-core";
+import type { SessionManager } from "@mariozechner/pi-coding-agent";
+import type { EnclawedConfig } from "../../config/types.enclawed.js";
+import type { ProviderRuntimeModel } from "../../plugins/provider-runtime-model.types.js";
+import type { TranscriptPolicy } from "../transcript-policy.js";
+/**
+ * Applies the generic replay-history cleanup pipeline before provider-owned
+ * replay hooks run.
+ */
+export declare function sanitizeSessionHistory(params: {
+    messages: AgentMessage[];
+    modelApi?: string | null;
+    modelId?: string;
+    provider?: string;
+    allowedToolNames?: Iterable<string>;
+    config?: EnclawedConfig;
+    workspaceDir?: string;
+    env?: NodeJS.ProcessEnv;
+    model?: ProviderRuntimeModel;
+    sessionManager: SessionManager;
+    sessionId: string;
+    policy?: TranscriptPolicy;
+    /**
+     * When false, the pipeline is read-only: no model snapshot is appended and
+     * provider replay hooks cannot append session entries. Used to re-derive the
+     * replay view mid-attempt without repeating the attempt's side effects.
+     */
+    persistSideEffects?: boolean;
+}): Promise<AgentMessage[]>;
+/**
+ * Runs provider-owned replay validation before falling back to the remaining
+ * generic validator pipeline.
+ */
+export declare function validateReplayTurns(params: {
+    messages: AgentMessage[];
+    modelApi?: string | null;
+    modelId?: string;
+    provider?: string;
+    config?: EnclawedConfig;
+    workspaceDir?: string;
+    env?: NodeJS.ProcessEnv;
+    model?: ProviderRuntimeModel;
+    sessionId?: string;
+    policy?: TranscriptPolicy;
+}): Promise<AgentMessage[]>;

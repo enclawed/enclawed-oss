@@ -1,0 +1,16 @@
+{
+  "name": "@enclawed/egress-semantic-scrambler",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Semantic-scrambler stage for the egress reference monitor",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/egress-core": "workspace:*",
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
