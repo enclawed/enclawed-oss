@@ -1,0 +1,38 @@
+{
+  "id": "egress-audio-scrambler",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Register the audio scrambler (default true)."
+      },
+      "minHz": {
+        "type": "number",
+        "minimum": 20,
+        "exclusiveMaximum": 20000,
+        "description": "Lowest frequency kept, in Hz (default 20, range 20 to below 20000). A higher value removes more of the low band."
+      },
+      "maxHz": {
+        "type": "number",
+        "exclusiveMinimum": 20,
+        "maximum": 20000,
+        "description": "Highest frequency kept, in Hz (default 20000, range above 20 to 20000). A lower value removes more of the high band."
+      },
+      "perceptualFloor": {
+        "type": "number",
+        "minimum": 0.003,
+        "exclusiveMaximum": 1,
+        "description": "Zero spectral bins below this fraction of the loudest bin (default 0.003, about -50 dB; range 0.003 to below 1)."
+      },
+      "perceptualFloorDb": {
+        "type": "number",
+        "maximum": 0,
+        "description": "The same floor in dB relative to the loudest bin (range -50 to 0). Set this or perceptualFloor, not both.",
+        "minimum": -50
+      }
+    }
+  }
+}

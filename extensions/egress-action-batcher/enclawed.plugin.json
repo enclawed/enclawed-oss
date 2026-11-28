@@ -1,0 +1,61 @@
+{
+  "id": "egress-action-batcher",
+  "enabledByDefaultInFlavors": ["enclaved"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Register the action batcher with the egress mediator. Its enforce/audit/off mode is the mediator's stages[\"egress-action-batcher\"] entry (default: enforce)."
+      },
+      "windowMs": {
+        "type": "number",
+        "description": "Batching window (default 250 ms; an integer from 250 to 10000, anything else is refused). Capacity: only actions that fall in the same window are reordered or collapsed, so a longer window covers more of a burst. Cost: up to windowMs added latency per batched tool call."
+      },
+      "canonicalOrder": {
+        "type": "boolean",
+        "description": "Release a window's independent actions sorted by SHA-256 of their canonical encoding (always on: false is refused). Capacity: removes the sequence channel (for k actions from N, k*log2(N) bits fall to the multiset bound log2(C(N+k-1,k))). Cost: the window's buffering latency; dependent actions keep their order."
+      },
+      "collapseIdempotentRepeats": {
+        "type": "boolean",
+        "description": "Collapse repeats of idempotent actions (always on: false is refused), keyed on the request actually sent (no fragment, no bare '?'): GET/HEAD/OPTIONS within the window and, for the rest of the run, from the recorded outcome of the one request that left (errors included); PUT/DELETE and identical file writes within the window only, and only when no other side-effecting action on the same resource shares the window. POST, messages, sends and unknown actions are never collapsed. Capacity: removes the count channel (multiset bound falls to the subset bound, N bits). Cost: a repeat gets the identical call's recorded result (reproduced exactly through the host's tool replay seam) instead of being re-sent. Within one run, a repeated read may be answered from a recent copy."
+      },
+      "cacheTtlMs": {
+        "type": "number",
+        "description": "Cross-window answering of side-effect-free repeats (default 30000; an integer from 1 to 600000, 0 is refused). It is on for the run's whole lifetime; within one run, a repeated read may be answered from a recent copy. A record is cleared only by an action that may change what it reads: an unsafe-method HTTP request to its origin, or a side-effecting tool call or send that names its origin. When memory budgets drop a record, its repeat is refused, never re-sent."
+      },
+      "padding": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Constant-set padding (default off). Each active window issues every member of allowedSet that the agent did not choose, as a dummy request through the padded tool's own request path (web_fetch: same headers, SSRF guard, byte limit and cancel, error-body limit and provider fallback), in lockstep with the real requests, on a fixed window grid. Fail-closed: with no request client the window is blocked. A request outside allowedSet leaks its identity: 9 bits per wire byte plus 1 are charged to the capacity ledger before release; the window holds up to 10 s for the ledger, then refuses that request. Capacity: the observed set is constant, so the per-window choice capacity is 0 for actions inside allowedSet. Cost: |allowedSet| requests per active window, plus grid-alignment latency. Requires collapseIdempotentRepeats to also hide counts.",
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "allowedSet": {
+            "type": "array",
+            "description": "Actions to keep constant: a URL string (GET) or { method, url } with method GET, HEAD or OPTIONS. Any other entry is refused; with padding enabled the set must not be empty.",
+            "items": {
+              "anyOf": [
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "method": { "type": "string", "enum": ["GET", "HEAD", "OPTIONS"] },
+                    "url": { "type": "string" }
+                  },
+                  "required": ["url"]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "tools": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "Tool names in scope at the tool-call chokepoint; the defaults can only be added to (default: message, sessions_send, web_fetch, web_search, x_search, browser, write; shell tools when their command reaches the network). A tool in scope is batched only through a declared mapping from its call to the request it sends (web_fetch: a GET of its URL; write: the file it writes), never on its parameters; one without a mapping is refused while the stage enforces, with an unmapped-tool audit record."
+      }
+    }
+  }
+}

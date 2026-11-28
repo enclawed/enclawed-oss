@@ -1,0 +1,29 @@
+{
+  "id": "egress-semantic-scrambler",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Set false to disable this stage. The deterministic and LLM scramblers are alternatives; enable at most one in a production pipeline."
+      },
+      "expandContractions": {
+        "type": "boolean",
+        "description": "Expand contractions (can't to cannot) so the contraction-form choice carries no bits. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "canonicalizeSynonyms": {
+        "type": "boolean",
+        "description": "Map each word in a synonym ring to the ring's canonical member. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "passiveToActive": {
+        "type": "boolean",
+        "description": "Rewrite simple passive-voice clauses to active voice. Fixed on: only true is accepted.",
+        "enum": [true]
+      }
+    }
+  }
+}

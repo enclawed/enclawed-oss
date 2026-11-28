@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "image-generation-core",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "tQc9/wis1HAXsSs76ZAoFrQvHwdngG7YLf4kOVdp4gm/0+4kf2DhzrhIkmlwDe6bsLQ4W/a+fcZJc8nrnVEJAQ=="
+}

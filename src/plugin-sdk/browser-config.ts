@@ -1,0 +1,18 @@
+export {
+  DEFAULT_AI_SNAPSHOT_MAX_CHARS,
+  DEFAULT_BROWSER_DEFAULT_PROFILE_NAME,
+  DEFAULT_BROWSER_EVALUATE_ENABLED,
+  DEFAULT_ENCLAWED_BROWSER_COLOR,
+  DEFAULT_ENCLAWED_BROWSER_ENABLED,
+  DEFAULT_ENCLAWED_BROWSER_PROFILE_NAME,
+  DEFAULT_UPLOAD_DIR,
+  resolveBrowserConfig,
+  resolveProfile,
+  type ResolvedBrowserConfig,
+  type ResolvedBrowserProfile,
+} from "./browser-profiles.js";
+export { parseBrowserHttpUrl, redactCdpUrl } from "./browser-cdp.js";
+export { ensureBrowserControlAuth, resolveBrowserControlAuth } from "./browser-control-auth.js";
+export type { BrowserControlAuth } from "./browser-control-auth.js";
+
+export { movePathToTrash } from "./browser-maintenance.js";

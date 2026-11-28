@@ -1,0 +1,25 @@
+{
+  "id": "egress-noise-injector",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "collapseWhitespaceRuns": {
+        "type": "boolean",
+        "description": "Collapse runs of spaces and tabs to one space, tabs to spaces, and three or more newlines to one blank line. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "normalizeTypography": {
+        "type": "boolean",
+        "description": "Map typographic variants (curly quotes, dashes, ellipsis) to plain ASCII. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "collapsePunctuationRuns": {
+        "type": "boolean",
+        "description": "Collapse repeated punctuation such as !!! or ??? to one mark. Fixed on: only true is accepted.",
+        "enum": [true]
+      }
+    }
+  }
+}

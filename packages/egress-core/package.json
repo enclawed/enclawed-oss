@@ -1,0 +1,10 @@
+{
+  "name": "@enclawed/egress-core",
+  "version": "0.0.0-private",
+  "private": true,
+  "description": "Reference-monitor core for the covert/side-channel egress defense suite",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

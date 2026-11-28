@@ -1,0 +1,145 @@
+import { i as normalizeLowercaseStringOrEmpty, s as normalizeOptionalString } from "./string-coerce-BUSzWgUA.js";
+import { t as createSubsystemLogger } from "./subsystem-BCgIuXto.js";
+import { a as loadConfig } from "./io-B2MO_b-F.js";
+import { r as normalizeProviderId } from "./provider-id-DtGJ5VJz.js";
+import "./config-BDqdmU33.js";
+import { t as resolveEnclawedAgentDir } from "./agent-paths-BB9ck7q-.js";
+import { t as augmentModelCatalogWithProviderPlugins } from "./provider-runtime.runtime-34m6sVAb.js";
+import { r as isDeniedModelProvider } from "./model-provider-denylist-C04ogqvc.js";
+import { t as ensureEnclawedModelsJson } from "./models-config-DdwXKPUN.js";
+//#region src/agents/model-catalog.ts
+const log = createSubsystemLogger("model-catalog");
+let modelCatalogPromise = null;
+let hasLoggedModelCatalogError = false;
+const defaultImportPiSdk = () => import("./agents/pi-model-discovery-runtime.js");
+let importPiSdk = defaultImportPiSdk;
+let modelSuppressionPromise;
+function shouldLogModelCatalogTiming() {
+	return process.env.ENCLAWED_DEBUG_INGRESS_TIMING === "1";
+}
+function loadModelSuppression() {
+	modelSuppressionPromise ??= import("./model-suppression.runtime-BvmogpGI.js");
+	return modelSuppressionPromise;
+}
+function resetModelCatalogCacheForTest() {
+	modelCatalogPromise = null;
+	hasLoggedModelCatalogError = false;
+	importPiSdk = defaultImportPiSdk;
+}
+function __setModelCatalogImportForTest(loader) {
+	importPiSdk = loader ?? defaultImportPiSdk;
+}
+async function loadModelCatalog(params) {
+	if (params?.useCache === false) modelCatalogPromise = null;
+	if (modelCatalogPromise) return modelCatalogPromise;
+	modelCatalogPromise = (async () => {
+		const models = [];
+		const timingEnabled = shouldLogModelCatalogTiming();
+		const startMs = timingEnabled ? Date.now() : 0;
+		const logStage = (stage, extra) => {
+			if (!timingEnabled) return;
+			const suffix = extra ? ` ${extra}` : "";
+			log.info(`model-catalog stage=${stage} elapsedMs=${Date.now() - startMs}${suffix}`);
+		};
+		const sortModels = (entries) => entries.sort((a, b) => {
+			const p = a.provider.localeCompare(b.provider);
+			if (p !== 0) return p;
+			return a.name.localeCompare(b.name);
+		});
+		try {
+			const cfg = params?.config ?? loadConfig();
+			await ensureEnclawedModelsJson(cfg);
+			logStage("models-json-ready");
+			const piSdk = await importPiSdk();
+			logStage("pi-sdk-imported");
+			const agentDir = resolveEnclawedAgentDir();
+			const { shouldSuppressBuiltInModel } = await loadModelSuppression();
+			logStage("catalog-deps-ready");
+			const authStorage = piSdk.discoverAuthStorage(agentDir);
+			logStage("auth-storage-ready");
+			const modelRuntime = await piSdk.discoverModelRuntime(authStorage, agentDir);
+			const registry = new piSdk.ModelRegistry(modelRuntime);
+			logStage("registry-ready");
+			const entries = registry.getAll();
+			logStage("registry-read", `entries=${entries.length}`);
+			for (const entry of entries) {
+				const id = normalizeOptionalString(entry?.id) ?? "";
+				if (!id) continue;
+				const provider = normalizeOptionalString(entry?.provider) ?? "";
+				if (!provider) continue;
+				if (shouldSuppressBuiltInModel({
+					provider,
+					id,
+					config: cfg
+				})) continue;
+				const name = normalizeOptionalString(entry?.name ?? id) || id;
+				const contextWindow = typeof entry?.contextWindow === "number" && entry.contextWindow > 0 ? entry.contextWindow : void 0;
+				const reasoning = typeof entry?.reasoning === "boolean" ? entry.reasoning : void 0;
+				const input = Array.isArray(entry?.input) ? entry.input : void 0;
+				models.push({
+					id,
+					name,
+					provider,
+					contextWindow,
+					reasoning,
+					input
+				});
+			}
+			const supplemental = await augmentModelCatalogWithProviderPlugins({
+				config: cfg,
+				env: process.env,
+				context: {
+					config: cfg,
+					agentDir,
+					env: process.env,
+					entries: [...models]
+				}
+			});
+			if (supplemental.length > 0) {
+				const seen = new Set(models.map((entry) => `${normalizeLowercaseStringOrEmpty(entry.provider)}::${normalizeLowercaseStringOrEmpty(entry.id)}`));
+				for (const entry of supplemental) {
+					const key = `${normalizeLowercaseStringOrEmpty(entry.provider)}::${normalizeLowercaseStringOrEmpty(entry.id)}`;
+					if (seen.has(key) || isDeniedModelProvider(entry.provider)) continue;
+					models.push(entry);
+					seen.add(key);
+				}
+			}
+			logStage("plugin-models-merged", `entries=${models.length}`);
+			if (models.length === 0) modelCatalogPromise = null;
+			const sorted = sortModels(models);
+			logStage("complete", `entries=${sorted.length}`);
+			return sorted;
+		} catch (error) {
+			if (!hasLoggedModelCatalogError) {
+				hasLoggedModelCatalogError = true;
+				log.warn(`Failed to load model catalog: ${String(error)}`);
+			}
+			modelCatalogPromise = null;
+			if (models.length > 0) return sortModels(models);
+			return [];
+		}
+	})();
+	return modelCatalogPromise;
+}
+/**
+* Check if a model supports image input based on its catalog entry.
+*/
+function modelSupportsVision(entry) {
+	return entry?.input?.includes("image") ?? false;
+}
+/**
+* Check if a model supports native document/PDF input based on its catalog entry.
+*/
+function modelSupportsDocument(entry) {
+	return entry?.input?.includes("document") ?? false;
+}
+/**
+* Find a model in the catalog by provider and model ID.
+*/
+function findModelInCatalog(catalog, provider, modelId) {
+	const normalizedProvider = normalizeProviderId(provider);
+	const normalizedModelId = normalizeLowercaseStringOrEmpty(modelId);
+	return catalog.find((entry) => normalizeProviderId(entry.provider) === normalizedProvider && normalizeLowercaseStringOrEmpty(entry.id) === normalizedModelId);
+}
+//#endregion
+export { modelSupportsVision as a, modelSupportsDocument as i, findModelInCatalog as n, resetModelCatalogCacheForTest as o, loadModelCatalog as r, __setModelCatalogImportForTest as t };

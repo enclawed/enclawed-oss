@@ -1,0 +1,15 @@
+{
+  "name": "@enclawed/vercel-ai-gateway-provider",
+  "version": "2026.4.25",
+  "private": true,
+  "description": "Enclawed Vercel AI Gateway provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@enclawed/plugin-sdk": "workspace:*"
+  },
+  "enclawed": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

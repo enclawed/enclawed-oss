@@ -1,0 +1,16 @@
+{
+  "id": "egress-taint-tracker",
+  "securityStage": true,
+  "enabledByDefaultInFlavors": ["enclaved"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Fixed on: only true is accepted. To run without the taint tracker, disable the plugin itself (plugins.entries.egress-taint-tracker.enabled), which the enclaved flavor refuses unless the admin policy allows it.",
+        "enum": [true]
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "firecrawl",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.25",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "VF3Deorys+CqoGYNotPr7cR7iwb/hjHSs9bVfZR1UxsIvssbK4uxJqvca81IR/9L90ZmwwNdDrniifXjIMGuAQ=="
+}

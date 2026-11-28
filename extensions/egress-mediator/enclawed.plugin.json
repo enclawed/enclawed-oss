@@ -1,0 +1,130 @@
+{
+  "id": "egress-mediator",
+  "enabledByDefaultInFlavors": ["enclaved"],
+  "contracts": {
+    "agentToolResultMiddleware": ["pi", "codex"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "Master switch for the covert/side-channel egress reference monitor."
+      },
+      "posture": {
+        "type": "string",
+        "enum": ["default", "enforce"],
+        "description": "default: lossless stages enforce, the rest audit. enforce: every stage enforces."
+      },
+      "stages": {
+        "type": "object",
+        "description": "Per-stage mode overrides keyed by stage id.",
+        "additionalProperties": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["enforce", "audit", "off"]
+            }
+          }
+        }
+      },
+      "ledger": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "capacityBits": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Bucket size per destination: the largest burst of estimated covert bits allowed (default 4096)."
+          },
+          "refillBitsPerSec": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Steady refill rate per destination (default 256). 0 means no refill: a fixed budget for the life of the process."
+          }
+        },
+        "description": "Per-destination capacity ledger (token bucket of estimated covert bits)."
+      },
+      "toolCall": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Mediate outbound tool arguments. Defaults to on in the hardened posture, off otherwise.",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "commandTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "modelInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Mediate tool results and inbound channel messages before they enter the model context. Defaults to on in the hardened posture, off otherwise.",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "toolResults": {
+            "type": "boolean"
+          },
+          "inbound": {
+            "type": "boolean"
+          }
+        }
+      },
+      "llm": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Model used by the egress-llm-scrambler stage.",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "timeoutMs": {
+            "type": "number"
+          }
+        }
+      },
+      "coverTraffic": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Back the egress-cover-traffic service with the channel send path.",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "media": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Mediate outbound attachments through the media scramblers and canonical media order (media_sending). Default on; inert until a media scrambler plugin is enabled or stages[\"egress-media-order\"] is enforce.",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+import { z, type ZodRawShape, type ZodTypeAny } from "zod";
+import type { ChannelConfigSchema, ChannelConfigUiHint } from "./types.config.js";
+type AnyZodSchema = {
+    safeParse(value: unknown): {
+        success: true;
+        data: unknown;
+    } | {
+        success: false;
+        error: {
+            issues: unknown[];
+        };
+    };
+};
+type ExtendableZodObject = ZodTypeAny & {
+    extend: (shape: Record<string, ZodTypeAny>) => ZodTypeAny;
+};
+export declare const AllowFromEntrySchema: z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>;
+export declare const AllowFromListSchema: z.ZodOptional<z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
+export declare function buildNestedDmConfigSchema<TExtraShape extends ZodRawShape = {}>(extraShape?: TExtraShape): z.ZodOptional<z.ZodObject<{
+    enabled: z.ZodOptional<z.ZodBoolean>;
+    policy: z.ZodOptional<z.ZodEnum<{
+        open: "open";
+        disabled: "disabled";
+        allowlist: "allowlist";
+        pairing: "pairing";
+    }>>;
+    allowFrom: z.ZodOptional<z.ZodArray<z.ZodUnion<readonly [z.ZodString, z.ZodNumber]>>>;
+}, z.core.$strip>>;
+export declare function buildCatchallMultiAccountChannelSchema<T extends ExtendableZodObject>(accountSchema: T): T;
+type BuildChannelConfigSchemaOptions = {
+    uiHints?: Record<string, ChannelConfigUiHint>;
+};
+export declare function buildChannelConfigSchema(schema: AnyZodSchema, options?: BuildChannelConfigSchemaOptions): ChannelConfigSchema;
+export declare function emptyChannelConfigSchema(): ChannelConfigSchema;
+export {};

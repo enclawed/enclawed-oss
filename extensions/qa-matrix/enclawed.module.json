@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "id": "qa-matrix",
+  "publisher": "enclawed-bundled",
+  "version": "2026.4.16",
+  "clearance": "internal",
+  "capabilities": ["fs.read"],
+  "signerKeyId": "enclawed-bundled-dev-2026",
+  "verification": "tested",
+  "netAllowedHosts": [],
+  "signature": "gjqm3jyEMCjGRA4FNsea0JiOhYL0hD9haYFPwjdD8SA5Ag/ksX/JAbsQYn+DN8j58Q4Er223GoIzkOe/EX9CCw=="
+}

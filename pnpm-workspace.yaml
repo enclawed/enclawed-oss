@@ -1,0 +1,123 @@
+packages:
+  - .
+  - ui
+  - packages/*
+  - extensions/*
+  - enclawed-apps/*
+  # qa-matrix references @enclawed/matrix which was stripped from this fork
+  # (cloud channel removed by the enclaved-flavor security policy). The
+  # dangling QA fixture is excluded from the workspace.
+  - "!extensions/qa-matrix"
+
+# Per-install platform scoping. Without this, pnpm dutifully downloads
+# every platform-specific binary that any workspace package declares as
+# an optional dep — sharp/napi-canvas/codex/llama-cpp/lancedb/rolldown/
+# typescript-native each ship 8–12 OS×arch×libc variants, which on a
+# fresh install pulls ~2 GB of binaries that will never run because the
+# matching one is already on disk. `current` collapses each set to the
+# single (os, cpu, libc) tuple of the machine running pnpm install.
+supportedArchitectures:
+  os:
+    - current
+  cpu:
+    - current
+  libc:
+    - current
+
+minimumReleaseAge: 2880
+
+minimumReleaseAgeExclude:
+  - "acpx"
+  - "axios"
+  - "basic-ftp"
+  - "hono"
+  - "enclawed"
+  - "protobufjs"
+  - "@buape/carbon"
+  - "vite"
+  - "@cloudflare/workers-types"
+  - "@hono/node-server"
+  - "@mariozechner/*"
+  - "@typescript/native-preview*"
+  - "@types/node"
+  - "@rolldown/*"
+  - "@oxlint/*"
+  - "@oxfmt/*"
+  - "axios@1.15.0"
+  - "discord-api-types"
+  - "rolldown"
+  - "sqlite-vec"
+  - "sqlite-vec-*"
+
+onlyBuiltDependencies:
+  # Built on macOS/Windows so the enclaweder hardware root can be
+  # driven there; Linux uses /dev/hidraw and needs no native module.
+  - node-hid
+  - "@lydell/node-pty"
+  - "@matrix-org/matrix-sdk-crypto-nodejs"
+  - "@napi-rs/canvas"
+  - "@tloncorp/api"
+  - "@tloncorp/tlon-skill"
+  - "@whiskeysockets/baileys"
+  - authenticate-pam
+  - esbuild
+  - node-llama-cpp
+  - protobufjs
+  - sharp
+
+ignoredBuiltDependencies:
+  - koffi
+
+# No version overrides. npm applies `overrides` only from the root project of an
+# install, so a consumer of the published package never receives them: a floor
+# that exists only here would make this workspace audit clean while every
+# `npm install enclawed` still resolved the vulnerable version. Fix an advisory
+# by upgrading the dependency that pins the vulnerable version. An override is
+# acceptable only when its target already satisfies every parent's declared
+# range (so it changes nothing a consumer gets); document why next to it.
+# scripts/check-audit-zero.mjs audits both this workspace and the consumer view.
+overrides:
+  # Exact pin after the 2026 axios supply-chain compromise (see
+  # src/plugins/dependency-denylist.ts): no workspace resolution may float onto
+  # a new axios release. 1.21.1 satisfies every parent's declared range
+  # (@microsoft/teams.* ^1.20.0, @slack/bolt ^1.12.0, @slack/web-api ^1.15.0),
+  # so it changes nothing an npm consumer resolves; the published
+  # npm-shrinkwrap.json pins the consumer copy.
+  axios: "1.21.1"
+
+# @buape/carbon (a devDependency; only two outbound tests import its UI
+# components) pins its server adapters as optionalDependencies at exact,
+# vulnerable versions (ws 8.20.0, @hono/node-server 1.19.13). Nothing here uses
+# those adapters, and carbon never ships, so the optional edges are not
+# installed instead of being forced past carbon's pins. A regular (non-optional)
+# dependency on either package is unaffected.
+ignoredOptionalDependencies:
+  - ws
+  - "@hono/node-server"
+
+# Reserved for source-patched dependencies; empty for now but keep the
+# key explicit so a missing block does not look like a missed migration.
+patchedDependencies: {}
+
+# Peer-dependency rules — narrow, audited, per-mismatch. Each entry
+# below documents WHY the upstream peer requirement is being relaxed
+# in this workspace. Do not add a rule here without writing the
+# justification next to it.
+peerDependencyRules:
+  allowedVersions:
+    # madge 8.x declares peer typescript@^5.4.4 but the repo has
+    # standardised on typescript 6.x for the framework + tooling.
+    # madge only runs at dev time (dependency graph reports) and
+    # works fine under TS 6 in practice.
+    typescript: "*"
+    # @vitest/coverage-v8 and vitest are released together but pnpm
+    # sometimes resolves them at adjacent patch versions in a
+    # workspace this size. Aligning them is a chore for every dep
+    # bump; the mismatch has no observable effect on coverage output.
+    vitest: "*"
+    "@vitest/coverage-v8": "*"
+    # prism-media (a transitive of @discordjs/voice) wants the legacy
+    # opusscript 0.0.x; the repo has 0.1.1 instead. The Discord
+    # channel is not loaded by the executive assistant app — this only matters
+    # for operators who wire Discord, and 0.1.x is a drop-in.
+    opusscript: "*"

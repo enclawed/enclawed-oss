@@ -1,0 +1,41 @@
+{
+  "id": "egress-canonicalizer",
+  "securityStage": true,
+  "enabledByDefaultInFlavors": ["enclaved"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "unicodeNfc": {
+        "type": "boolean",
+        "description": "Normalize Unicode to NFC so equivalent code-point sequences collapse to one. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "stripInvisible": {
+        "type": "boolean",
+        "description": "Remove invisible carriers: zero-width space, word joiner, BOM, variation selectors 1-14, the Tag block and the variation-selector supplement. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "stripBidi": {
+        "type": "boolean",
+        "description": "Remove bidirectional embeddings, overrides and isolates. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "foldMixedScript": {
+        "type": "boolean",
+        "description": "Fold Cyrillic/Greek look-alikes to ASCII inside words that mix scripts. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "normalizeWhitespace": {
+        "type": "boolean",
+        "description": "Turn exotic Unicode spaces into ordinary spaces and drop trailing whitespace. Fixed on: only true is accepted.",
+        "enum": [true]
+      },
+      "canonicalizeJson": {
+        "type": "boolean",
+        "description": "Re-emit a whole-payload JSON object or array with sorted keys. Fixed on: only true is accepted.",
+        "enum": [true]
+      }
+    }
+  }
+}

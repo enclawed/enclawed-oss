@@ -1,0 +1,33 @@
+import { s as isMissingEmbeddingApiKeyError } from "./engine-embeddings-PGu2yLYm.js";
+import "./memory-core-host-engine-embeddings-D2dhL558.js";
+import { c as DEFAULT_DEEPINFRA_EMBEDDING_MODEL } from "./media-models-B5Pvtu8B.js";
+import { t as createDeepInfraEmbeddingProvider } from "./embedding-provider-Dz2N0Veh.js";
+//#region extensions/deepinfra/memory-embedding-adapter.ts
+const deepinfraMemoryEmbeddingProviderAdapter = {
+	id: "deepinfra",
+	defaultModel: DEFAULT_DEEPINFRA_EMBEDDING_MODEL,
+	transport: "remote",
+	authProviderId: "deepinfra",
+	autoSelectPriority: 55,
+	allowExplicitWhenConfiguredAuto: true,
+	shouldContinueAutoSelection: isMissingEmbeddingApiKeyError,
+	create: async (options) => {
+		const { provider, client } = await createDeepInfraEmbeddingProvider({
+			...options,
+			provider: "deepinfra",
+			fallback: "none"
+		});
+		return {
+			provider,
+			runtime: {
+				id: "deepinfra",
+				cacheKeyData: {
+					provider: "deepinfra",
+					model: client.model
+				}
+			}
+		};
+	}
+};
+//#endregion
+export { deepinfraMemoryEmbeddingProviderAdapter as t };

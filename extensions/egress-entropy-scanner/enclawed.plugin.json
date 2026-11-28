@@ -1,0 +1,28 @@
+{
+  "id": "egress-entropy-scanner",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "minBlobLength": {
+        "type": "integer",
+        "minimum": 8,
+        "maximum": 64,
+        "description": "Shortest base64 or hex run reported as an encoded blob (default 64, range 8-64; a longer minimum would let bigger blobs through). Lower catches shorter blobs and charges more legitimate ids and hashes."
+      },
+      "entropyThresholdBits": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 5.4,
+        "description": "Character entropy in bits per character above which a message of 32 or more characters is flagged (default 5.4, range above 0 to 5.4)."
+      },
+      "incompressibleRatio": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 0.92,
+        "description": "DEFLATE compressed-to-raw size ratio above which a message of 64 or more characters is flagged as incompressible (default 0.92, range above 0 to 0.92)."
+      }
+    }
+  }
+}

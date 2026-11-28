@@ -1,0 +1,52 @@
+{
+  "id": "egress-behavioral-invariants",
+  "securityStage": true,
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "windowMs": {
+        "type": "integer",
+        "minimum": 60000,
+        "maximum": 86400000,
+        "description": "Rolling window for the rate and volume limits (default 60000 ms, range 60000-86400000; tighten-only, a shorter window would raise the rate)."
+      },
+      "maxMessagesPerWindow": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Most sends allowed to one destination per window (default 60, range 1-60; tighten-only). One tool call counts once, however many string arguments it has.",
+        "maximum": 60
+      },
+      "maxBytesPerWindow": {
+        "type": "integer",
+        "minimum": 1,
+        "description": "Most characters allowed to one destination per window (default 262144, range 1-262144; tighten-only).",
+        "maximum": 262144
+      },
+      "minIntervalMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 86400000,
+        "description": "Minimum spacing between sends to one destination; a faster send is delayed (default 0 = off)."
+      },
+      "timingQuantumMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 86400000,
+        "description": "Snap send times to a grid of this many ms, so the send time within a grid cell carries no bits (default 0 = off)."
+      },
+      "jitterMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 86400000,
+        "description": "Random jitter added on top of timing quantization (default 0 = off). Requires timingQuantumMs > 0."
+      },
+      "releaseCadenceMs": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 86400000,
+        "description": "Constant-rate paced release: consecutive sends to one destination leave at least this many ms apart, so the observed interval is input-independent (default 0 = off). The strongest timing-channel defense; adds queueing latency."
+      }
+    }
+  }
+}

